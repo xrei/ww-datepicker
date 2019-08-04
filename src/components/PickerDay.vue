@@ -173,7 +173,7 @@ export default {
   },
   methods: {
     compareExistDays (day) {
-      return [1,2,3,4,5,6,7].includes(day.date)
+      return [1, 2, 3, 4, 5, 6, 7].includes(day.date)
     },
     selectDate (date) {
       if (date.isDisabled) {

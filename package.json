@@ -33,8 +33,7 @@
     "prepublishOnly": "npm run build"
   },
   "pre-commit": [
-    "lint",
-    "test"
+    "lint"
   ],
   "dependencies": {},
   "peerDependencies": {

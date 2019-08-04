@@ -3,7 +3,6 @@
     <datepicker
       class="picker"
       placeholder="Select Date"
-      inline
       :mondayFirst="lang==='ru'"
       :language="langs[lang]"
       :disabled-dates="disabledDates"
