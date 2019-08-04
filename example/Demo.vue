@@ -245,7 +245,6 @@
         &lt;datepicker :minimumView="'month'" :maximumView="'year'" :initialView="'year'"&gt;&lt;/datepicker&gt;
       </code>
     </div>
-
   </div>
 </template>
 

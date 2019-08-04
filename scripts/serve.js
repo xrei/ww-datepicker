@@ -35,7 +35,7 @@ export default {
     }),
     livereload({
       verbose: true,
-      watch: path.join(__dirname, '..', 'example')
+      watch: '../src/'
     })
   ]
 }

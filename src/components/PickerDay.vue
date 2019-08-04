@@ -1,34 +1,51 @@
 <template>
   <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
-    <header>
-      <span
-        @click="isRtl ? nextMonth() : previousMonth()"
+    <header class="vdp__header">
+      <Arrow
         class="prev"
-        :class="{'disabled': isLeftNavDisabled}">&lt;</span>
-      <span class="day__month_btn" @click="showMonthCalendar" :class="allowedToShowView('month') ? 'up' : ''">{{ isYmd ? currYearName : currMonthName }} {{ isYmd ? currMonthName : currYearName }}</span>
-      <span
+        :class="{'disabled': isLeftNavDisabled}"
+        :right="true"
+        @click="isRtl ? nextMonth() : previousMonth()"
+      />
+      <span class="day__month_btn middle__btn"
+        @click="showMonthCalendar"
+        :class="allowedToShowView('month') ? 'up' : ''"
+      >
+      {{ isYmd ? currYearName : currMonthName }} {{ isYmd ? currMonthName : currYearName }}
+      </span>
+      
+      <Arrow 
         @click="isRtl ? previousMonth() : nextMonth()"
         class="next"
-        :class="{'disabled': isRightNavDisabled}">&gt;</span>
+        :class="{'disabled': isRightNavDisabled}"
+        :left="true"
+      />
     </header>
     <div :class="isRtl ? 'flex-rtl' : ''">
-      <span class="cell day-header" v-for="d in daysOfWeek" :key="d.timestamp">{{ d }}</span>
-      <template v-if="blankDays > 0">
-        <span class="cell day blank" v-for="d in blankDays" :key="d.timestamp"></span>
-      </template><!--
-      --><span class="cell day"
+      <div class="days-header">
+        <span class="cell day-header" v-for="d in daysOfWeek" :key="d.timestamp">{{ d }}</span>
+      </div>
+      <div class="exist-days">
+        <template v-if="blankDays > 0">
+          <span class="cell blank"
+            v-for="d in blankDays" :key="d.timestamp"></span>
+        </template>
+        <span class="cell day"
           v-for="day in days"
           :key="day.timestamp"
           :class="dayClasses(day)"
           v-html="dayCellContent(day)"
           @click="selectDate(day)"></span>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
+import Arrow from './Arrow.vue'
 export default {
+  components: {Arrow},
   props: {
     showDayView: Boolean,
     selectedDate: Date,
@@ -155,6 +172,9 @@ export default {
     }
   },
   methods: {
+    compareExistDays (day) {
+      return [1,2,3,4,5,6,7].includes(day.date)
+    },
     selectDate (date) {
       if (date.isDisabled) {
         this.$emit('selectedDisabled', date)
@@ -331,7 +351,8 @@ export default {
         'sat': day.isSaturday,
         'sun': day.isSunday,
         'highlight-start': day.isHighlightStart,
-        'highlight-end': day.isHighlightEnd
+        'highlight-end': day.isHighlightEnd,
+        'fst-act-svn-days': this.compareExistDays(day)
       }
     },
     /**

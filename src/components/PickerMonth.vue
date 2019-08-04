@@ -1,16 +1,20 @@
 <template>
   <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showMonthView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
-    <header>
-      <span
+    <header class="vdp__header">
+      <Arrow
         @click="isRtl ? nextYear() : previousYear()"
         class="prev"
-        :class="{'disabled': isLeftNavDisabled}">&lt;</span>
-      <span class="month__year_btn" @click="showYearCalendar" :class="allowedToShowView('year') ? 'up' : ''">{{ pageYearName }}</span>
-      <span
+        :class="{'disabled': isLeftNavDisabled}"
+        right
+      />
+      <span class="month__year_btn middle__btn" @click="showYearCalendar" :class="allowedToShowView('year') ? 'up' : ''">{{ pageYearName }}</span>
+      <Arrow
         @click="isRtl ? previousYear() : nextYear()"
         class="next"
-        :class="{'disabled': isRightNavDisabled}">&gt;</span>
+        :class="{'disabled': isRightNavDisabled}"
+        left
+      />
     </header>
     <span class="cell month"
       v-for="month in months"
@@ -21,7 +25,9 @@
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
+import Arrow from './Arrow.vue'
 export default {
+  components: {Arrow},
   props: {
     showMonthView: Boolean,
     selectedDate: Date,
