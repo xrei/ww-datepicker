@@ -6,6 +6,7 @@
       :mondayFirst="lang==='ru'"
       :language="langs[lang]"
       :disabled-dates="disabledDates"
+      inputClass="datepicker-input"
     />
   </div>
 </template>
@@ -33,18 +34,24 @@ export default {
 <style lang="scss">
 body {
   background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
 }
 #app {
   font-family: 'Circe', Helvetica, Arial, sans-serif;
   color: #2c3e50;
-  margin: 2rem;
+  margin: 1rem;
   margin-top: 60px;
 }
 
-input {
+.datepicker-input {
   background-color: #fff;
-  padding: 1rem;
+  padding: 26px;
+  font-size: 24px;
+  line-height: 1.33;
   max-width: 230px;
-  border: none;
+  border: 1px solid #eee;
+  max-height: 80px;
 }
 </style>
