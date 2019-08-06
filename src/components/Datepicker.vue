@@ -29,68 +29,107 @@
       <slot name="afterDateInput" slot="afterDateInput"></slot>
     </date-input>
 
+    <template v-if="!isMobilePicker">
+      <!-- Day View -->
+      <picker-day
+        v-if="allowedToShowView('day')"
+        :pageDate="pageDate"
+        :selectedDate="selectedDate"
+        :showDayView="showDayView"
+        :fullMonthName="fullMonthName"
+        :allowedToShowView="allowedToShowView"
+        :disabledDates="disabledDates"
+        :highlighted="highlighted"
+        :calendarClass="calendarClass"
+        :calendarStyle="calendarStyle"
+        :translation="translation"
+        :pageTimestamp="pageTimestamp"
+        :isRtl="isRtl"
+        :mondayFirst="mondayFirst"
+        :dayCellContent="dayCellContent"
+        :use-utc="useUtc"
+        @changedMonth="handleChangedMonthFromDayPicker"
+        @selectDate="selectDate"
+        @showMonthCalendar="showMonthCalendar"
+        @selectedDisabled="selectDisabledDate">
+        <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
+      </picker-day>
 
-    <!-- Day View -->
-    <picker-day
-      v-if="allowedToShowView('day')"
-      :pageDate="pageDate"
-      :selectedDate="selectedDate"
-      :showDayView="showDayView"
-      :fullMonthName="fullMonthName"
-      :allowedToShowView="allowedToShowView"
-      :disabledDates="disabledDates"
-      :highlighted="highlighted"
-      :calendarClass="calendarClass"
-      :calendarStyle="calendarStyle"
-      :translation="translation"
-      :pageTimestamp="pageTimestamp"
-      :isRtl="isRtl"
-      :mondayFirst="mondayFirst"
-      :dayCellContent="dayCellContent"
-      :use-utc="useUtc"
-      @changedMonth="handleChangedMonthFromDayPicker"
-      @selectDate="selectDate"
-      @showMonthCalendar="showMonthCalendar"
-      @selectedDisabled="selectDisabledDate">
-      <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
-    </picker-day>
+      <!-- Month View -->
+      <picker-month
+        v-if="allowedToShowView('month')"
+        :pageDate="pageDate"
+        :selectedDate="selectedDate"
+        :showMonthView="showMonthView"
+        :allowedToShowView="allowedToShowView"
+        :disabledDates="disabledDates"
+        :calendarClass="calendarClass"
+        :calendarStyle="calendarStyle"
+        :translation="translation"
+        :isRtl="isRtl"
+        :use-utc="useUtc"
+        @selectMonth="selectMonth"
+        @showYearCalendar="showYearCalendar"
+        @changedYear="setPageDate">
+        <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
+      </picker-month>
 
-    <!-- Month View -->
-    <picker-month
-      v-if="allowedToShowView('month')"
-      :pageDate="pageDate"
-      :selectedDate="selectedDate"
-      :showMonthView="showMonthView"
-      :allowedToShowView="allowedToShowView"
-      :disabledDates="disabledDates"
-      :calendarClass="calendarClass"
-      :calendarStyle="calendarStyle"
-      :translation="translation"
-      :isRtl="isRtl"
-      :use-utc="useUtc"
-      @selectMonth="selectMonth"
-      @showYearCalendar="showYearCalendar"
-      @changedYear="setPageDate">
-      <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
-    </picker-month>
+      <!-- Year View -->
+      <picker-year
+        v-if="allowedToShowView('year')"
+        :pageDate="pageDate"
+        :selectedDate="selectedDate"
+        :showYearView="showYearView"
+        :allowedToShowView="allowedToShowView"
+        :disabledDates="disabledDates"
+        :calendarClass="calendarClass"
+        :calendarStyle="calendarStyle"
+        :translation="translation"
+        :isRtl="isRtl"
+        :use-utc="useUtc"
+        @selectYear="selectYear"
+        @changedDecade="setPageDate">
+        <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
+      </picker-year>
+    </template>
 
-    <!-- Year View -->
-    <picker-year
-      v-if="allowedToShowView('year')"
-      :pageDate="pageDate"
-      :selectedDate="selectedDate"
-      :showYearView="showYearView"
-      :allowedToShowView="allowedToShowView"
-      :disabledDates="disabledDates"
-      :calendarClass="calendarClass"
-      :calendarStyle="calendarStyle"
-      :translation="translation"
-      :isRtl="isRtl"
-      :use-utc="useUtc"
-      @selectYear="selectYear"
-      @changedDecade="setPageDate">
-      <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
-    </picker-year>
+    <div v-if="isMobilePicker && mobileView"
+      class="mobile-view"
+    >
+      <picker-year
+        class="mobile-view__item"
+        :isMobile="isMobilePicker"
+        :pageDate="pageDate"
+        :selectedDate="selectedDate"
+        :showYearView="showYearView"
+        :allowedToShowView="allowedToShowView"
+        :disabledDates="disabledDates"
+        :calendarClass="calendarClass"
+        :calendarStyle="calendarStyle"
+        :translation="translation"
+        :isRtl="isRtl"
+        :use-utc="useUtc"
+        @selectYear="selectYear"
+        @changedDecade="setPageDate"
+      />
+      <picker-month
+        class="mobile-view__item"
+        :isMobile="isMobilePicker"
+        :pageDate="pageDate"
+        :selectedDate="selectedDate"
+        :showMonthView="showMonthView"
+        :allowedToShowView="allowedToShowView"
+        :disabledDates="disabledDates"
+        :calendarClass="calendarClass"
+        :calendarStyle="calendarStyle"
+        :translation="translation"
+        :isRtl="isRtl"
+        :use-utc="useUtc"
+        @selectMonth="selectMonth"
+        @showYearCalendar="showYearCalendar"
+        @changedYear="setPageDate"
+      />
+    </div>
   </div>
 </template>
 <script>
@@ -183,7 +222,8 @@ export default {
        */
       calendarHeight: 0,
       resetTypedDate: new Date(),
-      utils: constructedDateUtils
+      utils: constructedDateUtils,
+      mobileView: false
     }
   },
   watch: {
@@ -198,6 +238,9 @@ export default {
     }
   },
   computed: {
+    isMobilePicker () {
+      return window && window.innerWidth <= 375
+    },
     computedInitialView () {
       if (!this.initialView) {
         return this.minimumView
@@ -245,6 +288,10 @@ export default {
      * @return {mixed}
      */
     showCalendar () {
+      if (this.isMobilePicker) {
+        this.mobileView = true
+        return
+      }
       if (this.disabled || this.isInline) {
         return false
       }
@@ -348,7 +395,7 @@ export default {
      */
     selectDate (date) {
       this.setDate(date.timestamp)
-      if (!this.isInline) {
+      if (!this.isInline && !this.isMobilePicker) {
         this.close(true)
       }
       this.resetTypedDate = new Date()
@@ -377,6 +424,10 @@ export default {
      */
     selectYear (year) {
       const date = new Date(year.timestamp)
+      if (this.isMobilePicker) {
+        this.selectDate(year)
+        return
+      }
       if (this.allowedToShowView('month')) {
         this.setPageDate(date)
         this.$emit('changedYear', year)
@@ -433,6 +484,10 @@ export default {
      * @param {Boolean} emitEvent - emit close event
      */
     close (emitEvent) {
+      if (this.isMobilePicker) {
+        this.mobileView = false
+        return
+      }
       this.showDayView = this.showMonthView = this.showYearView = false
       if (!this.isInline) {
         if (emitEvent) {

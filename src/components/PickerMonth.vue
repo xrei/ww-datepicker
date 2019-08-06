@@ -1,5 +1,5 @@
 <template>
-  <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showMonthView" :style="calendarStyle" @mousedown.prevent>
+  <div v-if="!isMobile" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showMonthView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
     <header class="vdp__header">
       <Arrow
@@ -22,6 +22,9 @@
       :class="{'selected': month.isSelected, 'disabled': month.isDisabled}"
       @click.stop="selectMonth(month)">{{ month.month }}</span>
   </div>
+  <div v-else class="vdp-month__mobile">
+
+  </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
@@ -39,7 +42,8 @@ export default {
     translation: Object,
     isRtl: Boolean,
     allowedToShowView: Function,
-    useUtc: Boolean
+    useUtc: Boolean,
+    isMobile: Boolean
   },
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)

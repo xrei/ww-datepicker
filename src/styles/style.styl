@@ -113,3 +113,27 @@ $blue = #0070ff;
     &.disabled
         color #999
         cursor default
+
+.vdp-datepicker .mobile-view
+    height 180px
+    display flex
+    background-color #fff
+    &__item
+        flex 1 1 30%
+        height 100%
+        font-size: 24px
+        // overflow-y scroll
+        display flex
+        justify-content: center
+
+    .vdp-year__mobile
+        border 1px solid red
+    .vdp-month__mobile
+        border 1px solid blue
+    
+    .vdp-list
+        &__item
+            display flex
+            align-items: center
+            justify-content: center
+            color rgba(0,0,0, .4)

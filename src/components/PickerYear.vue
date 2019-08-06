@@ -1,5 +1,5 @@
 <template>
-  <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showYearView" :style="calendarStyle" @mousedown.prevent>
+  <div v-if="!isMobile" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showYearView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
     <header class="vdp__header">
       <Arrow
@@ -23,12 +23,16 @@
       :class="{ 'selected': year.isSelected, 'disabled': year.isDisabled }"
       @click.stop="selectYear(year)">{{ year.year }}</span>
   </div>
+  <div v-else class="vdp-year__mobile">
+    <VPicker :options="formattedYears" @input="selectYear($event)" />
+  </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
 import Arrow from './Arrow.vue'
+import VPicker from './VPicker'
 export default {
-  components: {Arrow},
+  components: {Arrow, VPicker},
   props: {
     showYearView: Boolean,
     selectedDate: Date,
@@ -41,9 +45,13 @@ export default {
     translation: Object,
     isRtl: Boolean,
     allowedToShowView: Function,
-    useUtc: Boolean
+    useUtc: Boolean,
+    isMobile: Boolean
   },
   computed: {
+    formattedYears() {
+      return this.makeYears().filter(v => !v.isDisabled).map(v => ({value: v, name: v.year}))
+    },
     years () {
       const d = this.pageDate
       let years = []
@@ -93,11 +101,31 @@ export default {
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
-      utils: constructedDateUtils
+      utils: constructedDateUtils,
+      selectedYear: null
     }
   },
   methods: {
+    makeYears(m) {
+      const d = new Date()
+      let years = []
+      // set up a new date object to the beginning of the current 'page'7
+      let dObj = this.useUtc
+        ? new Date(Date.UTC(Math.floor(d.getUTCFullYear() * 10) / 10, d.getUTCMonth(), d.getUTCDate()))
+        : new Date(Math.floor(d.getFullYear() * 10) / 10, d.getMonth(), d.getDate(), d.getHours(), d.getMinutes())
+      for (let i = 0; i < 10; i++) {
+        years.push({
+          year: this.utils.getFullYear(dObj),
+          timestamp: dObj.getTime(),
+          isSelected: this.isSelectedYear(dObj),
+          isDisabled: this.isDisabledYear(dObj)
+        })
+        this.utils.setFullYear(dObj, this.utils.getFullYear(dObj) + 1)
+      }
+      return years
+    },
     selectYear (year) {
+      this.selectedYear = year
       if (year.isDisabled) {
         return false
       }
@@ -122,11 +150,11 @@ export default {
       const lastYearInPreviousPage = Math.floor(this.utils.getFullYear(this.pageDate) / 10) * 10 - 1
       return disabledYear > lastYearInPreviousPage
     },
-    nextDecade () {
+    nextDecade (m) {
       if (this.isNextDecadeDisabled()) {
         return false
       }
-      this.changeYear(10)
+      this.changeYear(m || 10)
     },
     isNextDecadeDisabled () {
       if (!this.disabledDates || !this.disabledDates.from) {

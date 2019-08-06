@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <datepicker
+      v-model="date"
       class="picker"
       placeholder="Select Date"
       :mondayFirst="lang==='ru'"
@@ -21,10 +22,11 @@ export default {
     Datepicker
   },
   data: () => ({
+    date: '',
     langs: lang,
     lang: 'ru',
     disabledDates: {
-      to: new Date('2019-08-20')
+      // to: new Date('2019-08-20')
       // from: new Date('2019-09-20'),
     }
   })
