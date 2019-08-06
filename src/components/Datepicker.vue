@@ -129,6 +129,30 @@
         @showYearCalendar="showYearCalendar"
         @changedYear="setPageDate"
       />
+      <picker-day
+        class="mobile-view__item"
+        :isMobile="isMobilePicker"
+        :pageDate="pageDate"
+        :selectedDate="selectedDate"
+        :showDayView="showDayView"
+        :fullMonthName="fullMonthName"
+        :allowedToShowView="allowedToShowView"
+        :disabledDates="disabledDates"
+        :highlighted="highlighted"
+        :calendarClass="calendarClass"
+        :calendarStyle="calendarStyle"
+        :translation="translation"
+        :pageTimestamp="pageTimestamp"
+        :isRtl="isRtl"
+        :mondayFirst="mondayFirst"
+        :dayCellContent="dayCellContent"
+        :use-utc="useUtc"
+        :initialDay="selected.day.date"
+        @changedMonth="handleChangedMonthFromDayPicker"
+        @selectDate="selectDate"
+        @showMonthCalendar="showMonthCalendar"
+        @selectedDisabled="selectDisabledDate"
+      />
     </div>
   </div>
 </template>
@@ -223,7 +247,12 @@ export default {
       calendarHeight: 0,
       resetTypedDate: new Date(),
       utils: constructedDateUtils,
-      mobileView: false
+      mobileView: false,
+      selected: {
+        year: {},
+        month: {},
+        day: {}
+      }
     }
   },
   watch: {
@@ -304,6 +333,10 @@ export default {
      * Sets the initial picker page view: day, month or year
      */
     setInitialView () {
+      if (this.isMobilePicker) {
+        this.mobileView = true
+        return
+      }
       const initialView = this.computedInitialView
       if (!this.allowedToShowView(initialView)) {
         throw new Error(`initialView '${this.initialView}' cannot be rendered based on minimum '${this.minimumView}' and maximum '${this.maximumView}'`)
@@ -394,6 +427,12 @@ export default {
      * @param {Object} date
      */
     selectDate (date) {
+      if (this.isMobilePicker) {
+        this.selected.day = date
+        this.combineDates()
+        this.resetTypedDate = new Date()
+        return
+      }
       this.setDate(date.timestamp)
       if (!this.isInline && !this.isMobilePicker) {
         this.close(true)
@@ -406,11 +445,28 @@ export default {
     selectDisabledDate (date) {
       this.$emit('selectedDisabled', date)
     },
+    combineDates() {
+      let makeDate = t => t ? new Date(t) : new Date()
+      const year = makeDate(this.selected.year.timestamp).getFullYear()
+      const month = makeDate(this.selected.month.timestamp).getMonth()
+      const day = makeDate(this.selected.day.timestamp).getDate()
+      console.log(makeDate(this.selected.day.timestamp))
+      const date = new Date(year, month, day)
+      this.selectedDate = date
+      this.setPageDate(date)
+      this.$emit('selected', date)
+      this.$emit('input', date)
+    },
     /**
      * @param {Object} month
      */
     selectMonth (month) {
       const date = new Date(month.timestamp)
+      if (this.isMobilePicker) {
+        this.selected.month = month
+        this.combineDates()
+        return
+      }
       if (this.allowedToShowView('day')) {
         this.setPageDate(date)
         this.$emit('changedMonth', month)
@@ -425,7 +481,8 @@ export default {
     selectYear (year) {
       const date = new Date(year.timestamp)
       if (this.isMobilePicker) {
-        this.selectDate(year)
+        this.selected.year = year
+        this.combineDates()
         return
       }
       if (this.allowedToShowView('month')) {
@@ -464,7 +521,8 @@ export default {
           date = new Date()
         }
       }
-      this.pageTimestamp = this.utils.setDate(new Date(date), 1)
+      // this.pageTimestamp = this.utils.setDate(new Date(date), 1)
+      this.pageTimestamp = +new Date(date)
     },
     /**
      * Handles a month change from the day picker
@@ -502,10 +560,19 @@ export default {
     init () {
       if (this.value) {
         this.setValue(this.value)
+        this.initSelected()
       }
       if (this.isInline) {
         this.setInitialView()
       }
+    },
+    initSelected() {
+      this.selected.year.timestamp = new Date(this.value).setDate(1)
+      this.selected.year.year = new Date(this.value).getFullYear()
+      this.selected.month.timestamp = new Date(this.value).setDate(1)
+      this.selected.month.month = new Date(this.value).getMonth()
+      this.selected.day.timestamp = new Date(this.value).setDate(1)
+      this.selected.day.date = new Date(this.value).getDate()
     }
   },
   mounted () {

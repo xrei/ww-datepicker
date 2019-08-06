@@ -24,7 +24,10 @@
       @click.stop="selectYear(year)">{{ year.year }}</span>
   </div>
   <div v-else class="vdp-year__mobile">
-    <VPicker :options="formattedYears" @input="selectYear($event)" />
+    <VPicker
+      :initial="selectedDate.getFullYear()"
+      :options="formattedYears"
+      @input="selectYear($event)" />
   </div>
 </template>
 <script>
@@ -46,7 +49,7 @@ export default {
     isRtl: Boolean,
     allowedToShowView: Function,
     useUtc: Boolean,
-    isMobile: Boolean
+    isMobile: Boolean,
   },
   computed: {
     formattedYears() {
@@ -102,7 +105,7 @@ export default {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
       utils: constructedDateUtils,
-      selectedYear: null
+      selectedYear: this.selectedDate.getFullYear()
     }
   },
   methods: {
@@ -125,7 +128,7 @@ export default {
       return years
     },
     selectYear (year) {
-      this.selectedYear = year
+      this.selectedYear = year.year
       if (year.isDisabled) {
         return false
       }

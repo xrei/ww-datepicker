@@ -23,14 +23,19 @@
       @click.stop="selectMonth(month)">{{ month.month }}</span>
   </div>
   <div v-else class="vdp-month__mobile">
-
+    <VPicker
+      :initial="selectedMonth"
+      :options="fMonths"
+      @input="selectMonth($event)"
+    />
   </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
 import Arrow from './Arrow.vue'
+import VPicker from './VPicker'
 export default {
-  components: {Arrow},
+  components: {Arrow, VPicker},
   props: {
     showMonthView: Boolean,
     selectedDate: Date,
@@ -48,10 +53,14 @@ export default {
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
-      utils: constructedDateUtils
+      utils: constructedDateUtils,
+      selectedMonth: new Date(this.pageDate).getMonth()
     }
   },
   computed: {
+    fMonths() {
+      return this.months.filter(v => !v.isDisabled).map(v => ({value: v, name: v.month}))
+    },
     months () {
       const d = this.pageDate
       let months = []
@@ -64,7 +73,8 @@ export default {
           month: this.utils.getMonthName(i, this.translation.months),
           timestamp: dObj.getTime(),
           isSelected: this.isSelectedMonth(dObj),
-          isDisabled: this.isDisabledMonth(dObj)
+          isDisabled: this.isDisabledMonth(dObj),
+          id: i
         })
         this.utils.setMonth(dObj, this.utils.getMonth(dObj) + 1)
       }
@@ -103,6 +113,7 @@ export default {
      * @param {Object} month
      */
     selectMonth (month) {
+      this.selectedMonth = new Date(month.timestamp).getMonth()
       if (month.isDisabled) {
         return false
       }

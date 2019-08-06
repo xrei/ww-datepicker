@@ -5,6 +5,7 @@ const isTouchable = typeof window !== 'undefined' && 'ontouchstart' in window
 export default {
   props: {
     value: null,
+    initial: null,
     options: {
       type: Array,
       default: () => []
@@ -32,6 +33,13 @@ export default {
         }
       })
     }
+    // if (this.initial) {
+    //   this.options.map((v, i) => {
+    //     if (v.value.year === this.initial || v.value.id === this.initial || v.name === this.initial) {
+    //       lastIndex = i
+    //     }
+    //   })
+    // }
     return {
       top: 0,
       pivots: null,
@@ -45,6 +53,16 @@ export default {
       startY: null,
       scrollMax: null,
     }
+  },
+  beforeMount() {
+    if (this.initial) {
+      this.options.map((v, i) => {
+        if (v.value.year === this.initial || v.value.id === this.initial || v.name === this.initial) {
+          this.lastIndex = i
+        }
+      })
+    }
+    this.$forceUpdate()
   },
   mounted() {
     if (isTouchable) {
@@ -71,7 +89,7 @@ export default {
       this.top = this.pivots[this.lastIndex] * (-1)
     }
     if (!this.value && this.sanitizedOptions[this.lastIndex]) {
-      this.$emit('input', this.sanitizedOptions[this.lastIndex].value)
+      // this.$emit('input', this.sanitizedOptions[this.lastIndex].value)
     }
   },
   destroyed() {

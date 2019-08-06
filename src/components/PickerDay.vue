@@ -1,5 +1,5 @@
 <template>
-  <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" :style="calendarStyle" @mousedown.prevent>
+  <div v-if="!isMobile" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
     <header class="vdp__header">
       <Arrow
@@ -40,12 +40,20 @@
       </div>
     </div>
   </div>
+  <div v-else class="vdp-day__mobile">
+    <VPicker
+      :initial="initialDay"
+      :options="fDays"
+      @input="selectDate($event)"
+    />
+  </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
 import Arrow from './Arrow.vue'
+import VPicker from './VPicker'
 export default {
-  components: {Arrow},
+  components: {Arrow, VPicker},
   props: {
     showDayView: Boolean,
     selectedDate: Date,
@@ -64,15 +72,24 @@ export default {
     translation: Object,
     isRtl: Boolean,
     mondayFirst: Boolean,
-    useUtc: Boolean
+    useUtc: Boolean,
+    isMobile: Boolean,
+    initialDay: Number
+  },
+  mounted() {
+    this.selectedDay = this.initialDay
   },
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
-      utils: constructedDateUtils
+      utils: constructedDateUtils,
+      selectedDay: this.initialDay
     }
   },
   computed: {
+    fDays() {
+      return this.days.filter(v => !v.isDisabled).map(v => ({value: v, name: v.date}))
+    },
     /**
      * Returns an array of day names
      * @return {String[]}
@@ -123,7 +140,8 @@ export default {
           isToday: this.utils.compareDates(dObj, new Date()),
           isWeekend: this.utils.getDay(dObj) === 0 || this.utils.getDay(dObj) === 6,
           isSaturday: this.utils.getDay(dObj) === 6,
-          isSunday: this.utils.getDay(dObj) === 0
+          isSunday: this.utils.getDay(dObj) === 0,
+          id: this.utils.getDate(dObj)
         })
         this.utils.setDate(dObj, this.utils.getDate(dObj) + 1)
       }
@@ -176,6 +194,7 @@ export default {
       return [1, 2, 3, 4, 5, 6, 7].includes(day.date)
     },
     selectDate (date) {
+      this.selectedDay = date.date
       if (date.isDisabled) {
         this.$emit('selectedDisabled', date)
         return false
