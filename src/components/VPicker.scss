@@ -16,20 +16,28 @@
   left: 0;
   right: 0;
   top: 0;
-  padding-top: 3em;
+  padding-top: calc(63px);
   &.-transition {
-    transition: top ease 200ms;
+    transition: all cubic-bezier(0.23, 1, 0.32, 1) 100ms;
   }
 }
 .vue-scroll-picker-item {
+  position: relative;
   text-align: center;
-  height: 2.2em;
-  line-height: 2.2em;
+  height: 53px;
+  line-height: 53px;
+  font-size: 18px;
   &.-placeholder {
     color: #aaa;
   }
   &.-selected {
     color: #000;
+    font-size: 24px;
+  }
+  .vdp-label {
+    position: absolute;
+    right: 4px;
+    font-size: 12px;
   }
 }
 
@@ -51,14 +59,14 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 40%;
+    height: 35%;
     cursor: pointer;
   }
   .middle {
-    top: 40%;
+    top: 35%;
     left: 0;
     right: 0;
-    bottom: 40%;
+    bottom: 35%;
   }
   .bottom {
     // border-top: 1px solid #c8c7cc;
@@ -66,7 +74,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 40%;
+    height: 35%;
     cursor: pointer;
   }   
 }

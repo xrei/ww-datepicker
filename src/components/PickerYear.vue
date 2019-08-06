@@ -25,9 +25,10 @@
   </div>
   <div v-else class="vdp-year__mobile">
     <VPicker
-      :initial="selectedDate.getFullYear()"
+      :initial="selectedYear"
       :options="formattedYears"
-      @input="selectYear($event)" />
+      @input="selectYear($event)"
+    />
   </div>
 </template>
 <script>
@@ -53,7 +54,9 @@ export default {
   },
   computed: {
     formattedYears() {
-      return this.makeYears().filter(v => !v.isDisabled).map(v => ({value: v, name: v.year}))
+      return this.makeYears().filter(v => !v.isDisabled).map(v => ({
+        value: v, name: v.year, id: v.year
+      }))
     },
     years () {
       const d = this.pageDate
@@ -67,7 +70,8 @@ export default {
           year: this.utils.getFullYear(dObj),
           timestamp: dObj.getTime(),
           isSelected: this.isSelectedYear(dObj),
-          isDisabled: this.isDisabledYear(dObj)
+          isDisabled: this.isDisabledYear(dObj),
+          id: this.utils.getFullYear(dObj)
         })
         this.utils.setFullYear(dObj, this.utils.getFullYear(dObj) + 1)
       }
@@ -105,7 +109,7 @@ export default {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
       utils: constructedDateUtils,
-      selectedYear: this.selectedDate.getFullYear()
+      selectedYear: new Date(this.pageDate).getFullYear()
     }
   },
   methods: {
@@ -121,7 +125,8 @@ export default {
           year: this.utils.getFullYear(dObj),
           timestamp: dObj.getTime(),
           isSelected: this.isSelectedYear(dObj),
-          isDisabled: this.isDisabledYear(dObj)
+          isDisabled: this.isDisabledYear(dObj),
+          id: this.utils.getFullYear(dObj)
         })
         this.utils.setFullYear(dObj, this.utils.getFullYear(dObj) + 1)
       }

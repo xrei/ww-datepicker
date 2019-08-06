@@ -52,6 +52,13 @@
 import { makeDateUtils } from '../utils/DateUtils'
 import Arrow from './Arrow.vue'
 import VPicker from './VPicker'
+
+const getDay = (n, monFst) => {
+  if (monFst) {
+    return n === 0 ? 6 : n - 1
+  } else return n
+}
+
 export default {
   components: {Arrow, VPicker},
   props: {
@@ -88,7 +95,9 @@ export default {
   },
   computed: {
     fDays() {
-      return this.days.filter(v => !v.isDisabled).map(v => ({value: v, name: v.date}))
+      return this.days.filter(v => !v.isDisabled).map(v => ({
+        value: v, name: v.date, label: v.dayOfW, id: v.id
+      }))
     },
     /**
      * Returns an array of day names
@@ -141,7 +150,8 @@ export default {
           isWeekend: this.utils.getDay(dObj) === 0 || this.utils.getDay(dObj) === 6,
           isSaturday: this.utils.getDay(dObj) === 6,
           isSunday: this.utils.getDay(dObj) === 0,
-          id: this.utils.getDate(dObj)
+          id: this.utils.getDate(dObj),
+          dayOfW: this.daysOfWeek[getDay(this.utils.getDay(dObj), this.mondayFirst)]
         })
         this.utils.setDate(dObj, this.utils.getDate(dObj) + 1)
       }

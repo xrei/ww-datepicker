@@ -10,6 +10,8 @@
       inputClass="datepicker-input"
       inline
     />
+    <br>
+    {{ date.toLocaleDateString() }}
   </div>
 </template>
 

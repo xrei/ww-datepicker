@@ -163,6 +163,9 @@ import PickerDay from './PickerDay.vue'
 import PickerMonth from './PickerMonth.vue'
 import PickerYear from './PickerYear.vue'
 import utils, { makeDateUtils } from '../utils/DateUtils'
+
+const getTime = date => +new Date(date)
+
 export default {
   components: {
     DateInput,
@@ -450,7 +453,6 @@ export default {
       const year = makeDate(this.selected.year.timestamp).getFullYear()
       const month = makeDate(this.selected.month.timestamp).getMonth()
       const day = makeDate(this.selected.day.timestamp).getDate()
-      console.log(makeDate(this.selected.day.timestamp))
       const date = new Date(year, month, day)
       this.selectedDate = date
       this.setPageDate(date)
@@ -567,11 +569,11 @@ export default {
       }
     },
     initSelected() {
-      this.selected.year.timestamp = new Date(this.value).setDate(1)
+      this.selected.year.timestamp = getTime(this.value)
       this.selected.year.year = new Date(this.value).getFullYear()
-      this.selected.month.timestamp = new Date(this.value).setDate(1)
+      this.selected.month.timestamp = getTime(this.value)
       this.selected.month.month = new Date(this.value).getMonth()
-      this.selected.day.timestamp = new Date(this.value).setDate(1)
+      this.selected.day.timestamp = getTime(this.value)
       this.selected.day.date = new Date(this.value).getDate()
     }
   },

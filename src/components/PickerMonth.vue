@@ -59,7 +59,9 @@ export default {
   },
   computed: {
     fMonths() {
-      return this.months.filter(v => !v.isDisabled).map(v => ({value: v, name: v.month}))
+      return this.months.filter(v => !v.isDisabled).map(v => ({
+        value: v, name: v.month, id: v.id
+      }))
     },
     months () {
       const d = this.pageDate

@@ -1,6 +1,7 @@
 import './VPicker.scss'
 
 const isTouchable = typeof window !== 'undefined' && 'ontouchstart' in window
+const withLabel = (a, b) => a ? b + ' ' + `<span class="vdp-label">${a}</span>` : b
 
 export default {
   props: {
@@ -33,13 +34,6 @@ export default {
         }
       })
     }
-    // if (this.initial) {
-    //   this.options.map((v, i) => {
-    //     if (v.value.year === this.initial || v.value.id === this.initial || v.name === this.initial) {
-    //       lastIndex = i
-    //     }
-    //   })
-    // }
     return {
       top: 0,
       pivots: null,
@@ -57,27 +51,26 @@ export default {
   beforeMount() {
     if (this.initial) {
       this.options.map((v, i) => {
-        if (v.value.year === this.initial || v.value.id === this.initial || v.name === this.initial) {
+        if (v.value.id === this.initial || v.name === this.initial) {
           this.lastIndex = i
         }
       })
     }
-    this.$forceUpdate()
   },
   mounted() {
-    if (isTouchable) {
-      this.$el.addEventListener('touchstart', this.onStart)
-      this.$el.addEventListener('touchmove', this.onTouchMove)
-      this.$el.addEventListener('touchend', this.onEnd)
-      this.$el.addEventListener('touchcancel', this.onCancel)
-    } else {
-      this.$el.addEventListener('mousewheel', this.onScroll)
-      this.$el.addEventListener('wheel', this.onScroll) // for IE
-      this.$el.addEventListener('mousedown', this.onStart)
-      this.$el.addEventListener('mousemove', this.onMouseMove)
-      this.$el.addEventListener('mouseup', this.onEnd)
-      this.$el.addEventListener('mouseleave', this.onCancel)
-    }
+    // if (isTouchable) {
+    this.$el.addEventListener('touchstart', this.onStart)
+    this.$el.addEventListener('touchmove', this.onTouchMove)
+    this.$el.addEventListener('touchend', this.onEnd)
+    this.$el.addEventListener('touchcancel', this.onCancel)
+    // } else {
+    this.$el.addEventListener('mousewheel', this.onScroll)
+    this.$el.addEventListener('wheel', this.onScroll) // for IE
+    this.$el.addEventListener('mousedown', this.onStart)
+    this.$el.addEventListener('mousemove', this.onMouseMove)
+    this.$el.addEventListener('mouseup', this.onEnd)
+    this.$el.addEventListener('mouseleave', this.onCancel)
+    // }
     const rect = this.$refs.selection.getBoundingClientRect()
     const med = (rect.top + rect.bottom) / 2
     this.pivots = this.$refs.items.map((item) => {
@@ -93,19 +86,19 @@ export default {
     }
   },
   destroyed() {
-    if (isTouchable) {
-      this.$el.removeEventListener('touchstart', this.onStart)
-      this.$el.removeEventListener('touchmove', this.onTouchMove)
-      this.$el.removeEventListener('touchend', this.onEnd)
-      this.$el.removeEventListener('touchcancel', this.onCancel)
-    } else {
-      this.$el.removeEventListener('mousewheel', this.onScroll)
-      this.$el.removeEventListener('wheel', this.onScroll) // for IE
-      this.$el.removeEventListener('mousedown', this.onStart)
-      this.$el.removeEventListener('mousemove', this.onMouseMove)
-      this.$el.removeEventListener('mouseup', this.onEnd)
-      this.$el.removeEventListener('mouseleave', this.onCancel)
-    }
+    // if (isTouchable) {
+    this.$el.removeEventListener('touchstart', this.onStart)
+    this.$el.removeEventListener('touchmove', this.onTouchMove)
+    this.$el.removeEventListener('touchend', this.onEnd)
+    this.$el.removeEventListener('touchcancel', this.onCancel)
+  // } else {
+    this.$el.removeEventListener('mousewheel', this.onScroll)
+    this.$el.removeEventListener('wheel', this.onScroll) // for IE
+    this.$el.removeEventListener('mousedown', this.onStart)
+    this.$el.removeEventListener('mousemove', this.onMouseMove)
+    this.$el.removeEventListener('mouseup', this.onEnd)
+    this.$el.removeEventListener('mouseleave', this.onCancel)
+    // }
   },
   computed: {
     sanitizedOptions() {
@@ -282,11 +275,13 @@ export default {
           'vue-scroll-picker-item': true,
           '-selected': this.lastIndex === index
         },
-        key: option.value.timestamp, // $fix
+        key: option.id, // MUST HAVE PROPERTY `id`
         ref: 'items',
         refInFor: true,
         domProps: {
-          innerHTML: option.name,
+          innerHTML: this.lastIndex === index
+            ? withLabel(option.label, option.name)
+            : option.name,
         },
       })
     }))
@@ -302,7 +297,11 @@ export default {
           }
         }, items)
       ]),
-      h('div', {class: ['vue-scroll-picker-layer']}, [
+      h('div', {class: ['vue-scroll-picker-layer'],
+        on: {
+          'wheel': (e) => e.preventDefault()
+        }
+      }, [
         h('div', {class: ['top'], ref: 'top'}),
         h('div', {class: ['middle'], ref: 'selection'}),
         h('div', {class: ['bottom'], ref: 'bottom'}),
