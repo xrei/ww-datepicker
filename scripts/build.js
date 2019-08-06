@@ -7,7 +7,8 @@ import autoprefixer from 'autoprefixer'
 import commonjs from 'rollup-plugin-commonjs'
 
 export default [{
-  input: path.join(__dirname, '..', 'src', 'components', 'Datepicker.vue'),
+  // input: path.join(__dirname, '..', 'src', 'components', 'Datepicker.vue'),
+  input: path.join(__dirname, '..', 'src', 'index.js'),
   output: [
     {
       file: 'dist/vuejs-datepicker.js',
@@ -23,6 +24,7 @@ export default [{
       format: 'es'
     }
   ],
+  exports: 'named',
   plugins: [
     vue({css: true}),
     postcss({plugins: [autoprefixer()]}),
@@ -30,7 +32,8 @@ export default [{
     babel({exclude: 'node_modules/**'})
   ]
 }, {
-  input: path.join(__dirname, '..', 'src', 'components', 'Datepicker.vue'),
+  // input: path.join(__dirname, '..', 'src', 'components', 'Datepicker.vue'),
+  input: path.join(__dirname, '..', 'src', 'index.js'),
   output: {
     file: 'dist/vuejs-datepicker.min.js',
     format: 'umd',
