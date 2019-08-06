@@ -33,7 +33,7 @@
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
 import Arrow from './Arrow.vue'
-import VPicker from './VPicker'
+import VPicker from './VPicker/'
 export default {
   components: {Arrow, VPicker},
   props: {

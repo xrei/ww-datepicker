@@ -18,7 +18,8 @@
   top: 0;
   padding-top: calc(63px);
   &.-transition {
-    transition: all cubic-bezier(0.23, 1, 0.32, 1) 100ms;
+    will-change: top;
+    transition: top cubic-bezier(0.23, 1, 0.32, 1) 150ms;
   }
 }
 .vue-scroll-picker-item {

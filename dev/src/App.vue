@@ -8,7 +8,6 @@
       :language="langs[lang]"
       :disabled-dates="disabledDates"
       inputClass="datepicker-input"
-      inline
     />
     <br>
     {{ date.toLocaleDateString() }}
