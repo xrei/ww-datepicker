@@ -95,8 +95,9 @@ export default {
   },
   computed: {
     fDays() {
-      return this.days.filter(v => !v.isDisabled).map(v => ({
-        value: v, name: v.date, label: v.dayOfW, id: v.id
+      return this.days.map(v => ({
+        value: v, name: v.date, label: v.dayOfW, id: v.id,
+        disabled: v.isDisabled
       }))
     },
     /**

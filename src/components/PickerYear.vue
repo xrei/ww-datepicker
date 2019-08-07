@@ -54,8 +54,8 @@ export default {
   },
   computed: {
     formattedYears() {
-      return this.makeYears().filter(v => !v.isDisabled).map(v => ({
-        value: v, name: v.year, id: v.year
+      return this.makeYears().map(v => ({
+        value: v, name: v.year, id: v.year, disabled: v.isDisabled
       }))
     },
     years () {

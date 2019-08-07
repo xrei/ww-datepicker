@@ -24,7 +24,7 @@
   </div>
   <div v-else class="vdp-month__mobile">
     <VPicker
-      :initial="selectedMonth"
+      :initial="selectedMonthInit"
       :options="fMonths"
       @input="selectMonth($event)"
     />
@@ -54,13 +54,14 @@ export default {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
       utils: constructedDateUtils,
-      selectedMonth: new Date(this.pageDate).getMonth()
+      selectedMonth: new Date(this.pageDate).getMonth(),
+      selectedMonthInit: new Date(this.pageDate).getMonth()
     }
   },
   computed: {
     fMonths() {
-      return this.months.filter(v => !v.isDisabled).map(v => ({
-        value: v, name: v.month, id: v.id
+      return this.months.map(v => ({
+        value: v, name: v.month, id: v.id, disabled: v.isDisabled
       }))
     },
     months () {

@@ -8,9 +8,10 @@
       :language="langs[lang]"
       :disabled-dates="disabledDates"
       inputClass="datepicker-input"
+      inline
     />
     <br>
-    {{ date.toLocaleDateString() }}
+    {{ date.toString() }}
   </div>
 </template>
 
@@ -24,11 +25,11 @@ export default {
     Datepicker
   },
   data: () => ({
-    date: new Date(),
+    date: '',
     langs: lang,
     lang: 'ru',
     disabledDates: {
-      // to: new Date('2019-08-20')
+      to: new Date('2019-08-20'),
       // from: new Date('2023-09-20'),
     }
   })

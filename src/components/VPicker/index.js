@@ -71,12 +71,7 @@ export default {
     this.$el.addEventListener('mouseup', this.onEnd)
     this.$el.addEventListener('mouseleave', this.onCancel)
     // }
-    const rect = this.$refs.selection.getBoundingClientRect()
-    const med = (rect.top + rect.bottom) / 2
-    this.pivots = this.$refs.items.map((item) => {
-      const itemRect = item.getBoundingClientRect()
-      return Math.round(((itemRect.top + itemRect.bottom) / 2 - med) * 10) / 10
-    })
+    this.calculatePivots()
     this.scrollMax = this.pivots[this.pivots.length - 1] * (-1)
     if (this.lastIndex > 0) {
       this.top = this.pivots[this.lastIndex] * (-1)
@@ -123,8 +118,22 @@ export default {
         this.correction(foundIndex)
       }
     },
+    options() {
+      // this.$nextTick(() => {
+      //   // this.calculatePivots()
+      // })
+    }
   },
   methods: {
+    calculatePivots() {
+      const rect = this.$refs.selection.getBoundingClientRect()
+      const med = (rect.top + rect.bottom) / 2
+
+      this.pivots = this.$refs.items.map((item) => {
+        const itemRect = item.getBoundingClientRect()
+        return Math.round(((itemRect.top + itemRect.bottom) / 2 - med) * 10) / 10 - this.top
+      })
+    },
     onScroll(e) {
       if (this.top >= 0 && e.deltaY < 0) return
       if (this.top <= this.scrollMax && e.deltaY > 0) return
@@ -273,7 +282,8 @@ export default {
       return h('div', {
         class: {
           'vue-scroll-picker-item': true,
-          '-selected': this.lastIndex === index
+          '-selected': this.lastIndex === index,
+          'disabled': option.disabled
         },
         key: option.id, // MUST HAVE PROPERTY `id`
         ref: 'items',

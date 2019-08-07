@@ -35,6 +35,9 @@
     color: #000;
     font-size: 24px;
   }
+  &.disabled {
+    color: #aaa;
+  }
   .vdp-label {
     position: absolute;
     right: 4px;
