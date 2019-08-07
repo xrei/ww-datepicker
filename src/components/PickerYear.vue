@@ -1,16 +1,20 @@
 <template>
   <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showYearView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
-    <header>
-      <span
+    <header class="vdp__header">
+      <Arrow
+        :right="true"
         @click="isRtl ? nextDecade() : previousDecade()"
         class="prev"
-        :class="{'disabled': isLeftNavDisabled}">&lt;</span>
-      <span>{{ getPageDecade }}</span>
-      <span
+        :class="{'disabled': isLeftNavDisabled}"
+      />
+      <span class="middle__btn">{{ getPageDecade }}</span>
+      <Arrow
+        :left="true"
         @click="isRtl ? previousDecade() : nextDecade()"
         class="next"
-        :class="{'disabled': isRightNavDisabled}">&gt;</span>
+        :class="{'disabled': isRightNavDisabled}"
+      />
     </header>
     <span
       class="cell year"
@@ -22,7 +26,10 @@
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
+import Arrow from './Arrow'
+
 export default {
+  components: {Arrow},
   props: {
     showYearView: Boolean,
     selectedDate: Date,

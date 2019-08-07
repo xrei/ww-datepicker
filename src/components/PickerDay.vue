@@ -1,16 +1,20 @@
 <template>
   <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
-    <header>
-      <span
+    <header class="vdp__header">
+      <Arrow
+        :right="true"
         @click="isRtl ? nextMonth() : previousMonth()"
         class="prev"
-        :class="{'disabled': isLeftNavDisabled}">&lt;</span>
-      <span class="day__month_btn" @click="showMonthCalendar" :class="allowedToShowView('month') ? 'up' : ''">{{ isYmd ? currYearName : currMonthName }} {{ isYmd ? currMonthName : currYearName }}</span>
-      <span
+        :class="{'disabled': isLeftNavDisabled}"
+      />
+      <span class="day__month_btn middle__btn" @click="showMonthCalendar" :class="allowedToShowView('month') ? 'up' : ''">{{ isYmd ? currYearName : currMonthName }} {{ isYmd ? currMonthName : currYearName }}</span>
+      <Arrow
+        :left="true"
         @click="isRtl ? previousMonth() : nextMonth()"
         class="next"
-        :class="{'disabled': isRightNavDisabled}">&gt;</span>
+        :class="{'disabled': isRightNavDisabled}"
+      />
     </header>
     <div :class="isRtl ? 'flex-rtl' : ''">
       <span class="cell day-header" v-for="d in daysOfWeek" :key="d.timestamp">{{ d }}</span>
@@ -28,7 +32,10 @@
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
+import Arrow from './Arrow'
+
 export default {
+  components: {Arrow},
   props: {
     showDayView: Boolean,
     selectedDate: Date,
