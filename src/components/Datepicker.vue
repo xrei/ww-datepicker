@@ -29,7 +29,7 @@
       <slot name="afterDateInput" slot="afterDateInput"></slot>
     </date-input>
 
-
+  <template v-if="!isMobile">
     <!-- Day View -->
     <picker-day
       v-if="allowedToShowView('day')"
@@ -91,6 +91,60 @@
       @changedDecade="setPageDate">
       <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
     </picker-year>
+  </template>
+  <div v-if="isMobile" class="mobile-view">
+    <picker-year
+      class="mobile-view__item"
+      :isMobile="isMobile"
+      :pageDate="pageDate"
+      :selectedDate="selectedDate"
+      :showYearView="showYearView"
+      :allowedToShowView="allowedToShowView"
+      :disabledDates="disabledDates"
+      :calendarClass="calendarClass"
+      :calendarStyle="calendarStyle"
+      :translation="translation"
+      :isRtl="isRtl"
+      :use-utc="useUtc"
+      @selectYear="mobileSelYear"
+    />
+    <picker-month
+      class="mobile-view__item"
+      :isMobile="isMobile"
+      :pageDate="pageDate"
+      :selectedDate="selectedDate"
+      :showMonthView="showMonthView"
+      :allowedToShowView="allowedToShowView"
+      :disabledDates="disabledDates"
+      :calendarClass="calendarClass"
+      :calendarStyle="calendarStyle"
+      :translation="translation"
+      :isRtl="isRtl"
+      :use-utc="useUtc"
+      @selectMonth="mobileSelMonth"
+    />
+    <picker-day
+      class="mobile-view__item"	
+      :isMobile="isMobile"
+      :pageDate="pageDate"
+      :selectedDate="selectedDate"
+      :showDayView="showDayView"
+      :fullMonthName="fullMonthName"
+      :allowedToShowView="allowedToShowView"
+      :disabledDates="disabledDates"
+      :highlighted="highlighted"
+      :calendarClass="calendarClass"
+      :calendarStyle="calendarStyle"
+      :translation="translation"
+      :pageTimestamp="pageTimestamp"
+      :isRtl="isRtl"
+      :mondayFirst="mondayFirst"
+      :dayCellContent="dayCellContent"
+      :use-utc="useUtc"
+      @selectDate="mobileSelDay"
+      @selectedDisabled="selectDisabledDate"
+    />
+  </div>
   </div>
 </template>
 <script>
@@ -100,6 +154,9 @@ import PickerDay from './PickerDay.vue'
 import PickerMonth from './PickerMonth.vue'
 import PickerYear from './PickerYear.vue'
 import utils, { makeDateUtils } from '../utils/DateUtils'
+
+const getTime = date => +new Date(date)
+
 export default {
   components: {
     DateInput,
@@ -183,7 +240,14 @@ export default {
        */
       calendarHeight: 0,
       resetTypedDate: new Date(),
-      utils: constructedDateUtils
+      utils: constructedDateUtils,
+      mobSelected: {
+        day: {},
+        month: {},
+        year: {},
+        date: this.selectedDate,
+        unix: 0
+      }
     }
   },
   watch: {
@@ -195,9 +259,19 @@ export default {
     },
     initialView () {
       this.setInitialView()
+    },
+    mobDateWatch() {
+      console.log('trgg')
+      this.setDate(this.mobSelected.date)
     }
   },
   computed: {
+    mobDateWatch() {
+      return this.mobSelected.unix
+    },
+    isMobile() {
+      return window && window.innerWidth <= 375
+    },
     computedInitialView () {
       if (!this.initialView) {
         return this.minimumView
@@ -343,6 +417,30 @@ export default {
       this.$emit('input', null)
       this.$emit('cleared')
     },
+
+    mobileSelDay(date) {
+      this.mobSelected.day = date
+      let max = this.mobSelected.month.maxDays
+      const day = date.date >= max ? max : date.date
+      this.mobSelected.date.setDate(day)
+      this.mobSelected.unix = +new Date(this.mobSelected.date)
+    },
+    mobileSelMonth(date) {
+      this.mobSelected.month = date
+
+      let max = this.mobSelected.month.maxDays
+      if (date.maxDays >= max) {
+        this.mobileSelDay({date: date.maxDays})
+      }
+
+      this.mobSelected.date.setMonth(date.id)
+      this.mobSelected.unix = +new Date(this.mobSelected.date)
+    },
+    mobileSelYear(date) {
+      this.mobSelected.year = date
+      this.mobSelected.date.setFullYear(date.year)
+      this.mobSelected.unix = +new Date(this.mobSelected.date)
+    },
     /**
      * @param {Object} date
      */
@@ -447,10 +545,21 @@ export default {
     init () {
       if (this.value) {
         this.setValue(this.value)
+        this.initSelected()
       }
       if (this.isInline) {
         this.setInitialView()
       }
+    },
+    initSelected() {
+      this.mobSelected.year.timestamp = getTime(this.value)
+      this.mobSelected.year.year = new Date(this.value).getFullYear()
+      this.mobSelected.month.timestamp = getTime(this.value)
+      this.mobSelected.month.month = new Date(this.value).getMonth()
+      this.mobSelected.day.timestamp = getTime(this.value)
+      this.mobSelected.day.date = new Date(this.value).getDate()
+      this.mobSelected.date = new Date(this.value)
+      this.mobSelected.unix = +new Date(this.value)
     }
   },
   mounted () {

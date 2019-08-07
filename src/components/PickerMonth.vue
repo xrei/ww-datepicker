@@ -1,5 +1,5 @@
 <template>
-  <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showMonthView" :style="calendarStyle" @mousedown.prevent>
+  <div v-if="!isMobile" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showMonthView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
     <header class="vdp__header">
       <Arrow
@@ -22,14 +22,25 @@
       :class="{'selected': month.isSelected, 'disabled': month.isDisabled}"
       @click.stop="selectMonth(month)">{{ month.month }}</span>
   </div>
+  <div v-else class="vdp-month__mobile">	
+    <VPicker	
+      :initial="0"
+      :options="fMonths"	
+      @input="selectMonth($event)"	
+    />	
+  </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
 import Arrow from './Arrow'
+import VPicker from './VPicker/'
+
+const getMaxDays = (m, y) => new Date(y, m + 1, 0).getDate()
 
 export default {
-  components: {Arrow},
+  components: {Arrow, VPicker},
   props: {
+    isMobile: Boolean,
     showMonthView: Boolean,
     selectedDate: Date,
     pageDate: Date,
@@ -49,6 +60,11 @@ export default {
     }
   },
   computed: {
+    fMonths() {
+      return this.months.map(v => ({
+        value: v, name: v.month, id: v.id, disabled: v.isDisabled
+      }))
+    },
     months () {
       const d = this.pageDate
       let months = []
@@ -61,7 +77,9 @@ export default {
           month: this.utils.getMonthName(i, this.translation.months),
           timestamp: dObj.getTime(),
           isSelected: this.isSelectedMonth(dObj),
-          isDisabled: this.isDisabledMonth(dObj)
+          isDisabled: this.isDisabledMonth(dObj),
+          id: i,
+          maxDays: getMaxDays(i, d.getFullYear())
         })
         this.utils.setMonth(dObj, this.utils.getMonth(dObj) + 1)
       }

@@ -1,5 +1,5 @@
 <template>
-  <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showYearView" :style="calendarStyle" @mousedown.prevent>
+  <div v-if="!isMobile" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showYearView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
     <header class="vdp__header">
       <Arrow
@@ -23,14 +23,22 @@
       :class="{ 'selected': year.isSelected, 'disabled': year.isDisabled }"
       @click.stop="selectYear(year)">{{ year.year }}</span>
   </div>
+  <div v-else class="vdp-year__mobile">	
+    <VPicker	
+      :options="fYears"	
+      @input="selectYear($event)"	
+    />	
+  </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
 import Arrow from './Arrow'
+import VPicker from './VPicker/'
 
 export default {
-  components: {Arrow},
+  components: {Arrow, VPicker},
   props: {
+    isMobile: Boolean,
     showYearView: Boolean,
     selectedDate: Date,
     pageDate: Date,
@@ -45,6 +53,9 @@ export default {
     useUtc: Boolean
   },
   computed: {
+    fYears() {
+      return this.makeYrs().map(v => ({value: v, id: v.year, name: v.year}))
+    },
     years () {
       const d = this.pageDate
       let years = []
@@ -98,6 +109,25 @@ export default {
     }
   },
   methods: {
+    makeYrs () {
+      const d = new Date()
+      let years = []
+      // set up a new date object to the beginning of the current 'page'7
+      let dObj = this.useUtc
+        ? new Date(Date.UTC(Math.floor(d.getUTCFullYear() * 10) / 10, d.getUTCMonth(), d.getUTCDate()))
+        : new Date(Math.floor(d.getFullYear() * 10) / 10, d.getMonth(), d.getDate(), d.getHours(), d.getMinutes())
+      for (let i = 0; i < 10; i++) {
+        years.push({
+          year: this.utils.getFullYear(dObj),
+          timestamp: dObj.getTime(),
+          isSelected: this.isSelectedYear(dObj),
+          isDisabled: this.isDisabledYear(dObj),
+          id: this.utils.getFullYear(dObj)
+        })
+        this.utils.setFullYear(dObj, this.utils.getFullYear(dObj) + 1)
+      }
+      return years
+    },
     selectYear (year) {
       if (year.isDisabled) {
         return false

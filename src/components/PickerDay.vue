@@ -1,5 +1,5 @@
 <template>
-  <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" :style="calendarStyle" @mousedown.prevent>
+  <div v-if="!isMobile" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
     <header class="vdp__header">
       <Arrow
@@ -29,14 +29,28 @@
           @click="selectDate(day)"></span>
     </div>
   </div>
+  <div v-else class="vdp-day__mobile">	
+    <VPicker	
+      :options="fDays"	
+      @input="selectDate($event)"	
+    />	
+  </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
+import VPicker from './VPicker/'
 import Arrow from './Arrow'
 
+const getDay = (n, monFst) => {
+  if (monFst) {
+    return n === 0 ? 6 : n - 1
+  } else return n
+}
+
 export default {
-  components: {Arrow},
+  components: {Arrow, VPicker},
   props: {
+    isMobile: Boolean,
     showDayView: Boolean,
     selectedDate: Date,
     pageDate: Date,
@@ -63,6 +77,15 @@ export default {
     }
   },
   computed: {
+    fDays() {
+      return this.days.map(v => ({
+        value: v,
+        name: v.date,
+        label: v.dayOfW,
+        id: v.id,
+        disabled: v.isDisabled
+      }))
+    },
     /**
      * Returns an array of day names
      * @return {String[]}
@@ -113,7 +136,9 @@ export default {
           isToday: this.utils.compareDates(dObj, new Date()),
           isWeekend: this.utils.getDay(dObj) === 0 || this.utils.getDay(dObj) === 6,
           isSaturday: this.utils.getDay(dObj) === 6,
-          isSunday: this.utils.getDay(dObj) === 0
+          isSunday: this.utils.getDay(dObj) === 0,
+          id: this.utils.getDate(dObj),
+          dayOfW: this.daysOfWeek[getDay(this.utils.getDay(dObj), this.mondayFirst)]
         })
         this.utils.setDate(dObj, this.utils.getDate(dObj) + 1)
       }
