@@ -96,7 +96,10 @@ export default {
   computed: {
     fDays() {
       return this.days.map(v => ({
-        value: v, name: v.date, label: v.dayOfW, id: v.id,
+        value: v,
+        name: v.date,
+        label: v.dayOfW,
+        id: v.id,
         disabled: v.isDisabled
       }))
     },
