@@ -1,20 +1,16 @@
 <template>
-  <div v-if="!isMobile" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showYearView" :style="calendarStyle" @mousedown.prevent>
+  <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showYearView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
-    <header class="vdp__header">
-      <Arrow
+    <header>
+      <span
         @click="isRtl ? nextDecade() : previousDecade()"
         class="prev"
-        :class="{'disabled': isLeftNavDisabled}"
-        :right="true"
-      />
-      <span class="middle__btn">{{ getPageDecade }}</span>
-      <Arrow
+        :class="{'disabled': isLeftNavDisabled}">&lt;</span>
+      <span>{{ getPageDecade }}</span>
+      <span
         @click="isRtl ? previousDecade() : nextDecade()"
         class="next"
-        :class="{'disabled': isRightNavDisabled}"
-        :left="true"
-      />
+        :class="{'disabled': isRightNavDisabled}">&gt;</span>
     </header>
     <span
       class="cell year"
@@ -23,20 +19,10 @@
       :class="{ 'selected': year.isSelected, 'disabled': year.isDisabled }"
       @click.stop="selectYear(year)">{{ year.year }}</span>
   </div>
-  <div v-else class="vdp-year__mobile">
-    <VPicker
-      :initial="selectedYear"
-      :options="formattedYears"
-      @input="selectYear($event)"
-    />
-  </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
-import Arrow from './Arrow.vue'
-import VPicker from './VPicker/'
 export default {
-  components: {Arrow, VPicker},
   props: {
     showYearView: Boolean,
     selectedDate: Date,
@@ -49,15 +35,9 @@ export default {
     translation: Object,
     isRtl: Boolean,
     allowedToShowView: Function,
-    useUtc: Boolean,
-    isMobile: Boolean,
+    useUtc: Boolean
   },
   computed: {
-    formattedYears() {
-      return this.makeYears().map(v => ({
-        value: v, name: v.year, id: v.year, disabled: v.isDisabled
-      }))
-    },
     years () {
       const d = this.pageDate
       let years = []
@@ -70,8 +50,7 @@ export default {
           year: this.utils.getFullYear(dObj),
           timestamp: dObj.getTime(),
           isSelected: this.isSelectedYear(dObj),
-          isDisabled: this.isDisabledYear(dObj),
-          id: this.utils.getFullYear(dObj)
+          isDisabled: this.isDisabledYear(dObj)
         })
         this.utils.setFullYear(dObj, this.utils.getFullYear(dObj) + 1)
       }
@@ -108,32 +87,11 @@ export default {
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
-      utils: constructedDateUtils,
-      selectedYear: new Date(this.pageDate).getFullYear()
+      utils: constructedDateUtils
     }
   },
   methods: {
-    makeYears(m) {
-      const d = new Date()
-      let years = []
-      // set up a new date object to the beginning of the current 'page'7
-      let dObj = this.useUtc
-        ? new Date(Date.UTC(Math.floor(d.getUTCFullYear() * 10) / 10, d.getUTCMonth(), d.getUTCDate()))
-        : new Date(Math.floor(d.getFullYear() * 10) / 10, d.getMonth(), d.getDate(), d.getHours(), d.getMinutes())
-      for (let i = 0; i < 10; i++) {
-        years.push({
-          year: this.utils.getFullYear(dObj),
-          timestamp: dObj.getTime(),
-          isSelected: this.isSelectedYear(dObj),
-          isDisabled: this.isDisabledYear(dObj),
-          id: this.utils.getFullYear(dObj)
-        })
-        this.utils.setFullYear(dObj, this.utils.getFullYear(dObj) + 1)
-      }
-      return years
-    },
     selectYear (year) {
-      this.selectedYear = year.year
       if (year.isDisabled) {
         return false
       }
@@ -158,11 +116,11 @@ export default {
       const lastYearInPreviousPage = Math.floor(this.utils.getFullYear(this.pageDate) / 10) * 10 - 1
       return disabledYear > lastYearInPreviousPage
     },
-    nextDecade (m) {
+    nextDecade () {
       if (this.isNextDecadeDisabled()) {
         return false
       }
-      this.changeYear(m || 10)
+      this.changeYear(10)
     },
     isNextDecadeDisabled () {
       if (!this.disabledDates || !this.disabledDates.from) {

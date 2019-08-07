@@ -1,20 +1,16 @@
 <template>
-  <div v-if="!isMobile" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showMonthView" :style="calendarStyle" @mousedown.prevent>
+  <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showMonthView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
-    <header class="vdp__header">
-      <Arrow
+    <header>
+      <span
         @click="isRtl ? nextYear() : previousYear()"
         class="prev"
-        :class="{'disabled': isLeftNavDisabled}"
-        right
-      />
-      <span class="month__year_btn middle__btn" @click="showYearCalendar" :class="allowedToShowView('year') ? 'up' : ''">{{ pageYearName }}</span>
-      <Arrow
+        :class="{'disabled': isLeftNavDisabled}">&lt;</span>
+      <span class="month__year_btn" @click="showYearCalendar" :class="allowedToShowView('year') ? 'up' : ''">{{ pageYearName }}</span>
+      <span
         @click="isRtl ? previousYear() : nextYear()"
         class="next"
-        :class="{'disabled': isRightNavDisabled}"
-        left
-      />
+        :class="{'disabled': isRightNavDisabled}">&gt;</span>
     </header>
     <span class="cell month"
       v-for="month in months"
@@ -22,20 +18,10 @@
       :class="{'selected': month.isSelected, 'disabled': month.isDisabled}"
       @click.stop="selectMonth(month)">{{ month.month }}</span>
   </div>
-  <div v-else class="vdp-month__mobile">
-    <VPicker
-      :initial="selectedMonthInit"
-      :options="fMonths"
-      @input="selectMonth($event)"
-    />
-  </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
-import Arrow from './Arrow.vue'
-import VPicker from './VPicker/'
 export default {
-  components: {Arrow, VPicker},
   props: {
     showMonthView: Boolean,
     selectedDate: Date,
@@ -47,23 +33,15 @@ export default {
     translation: Object,
     isRtl: Boolean,
     allowedToShowView: Function,
-    useUtc: Boolean,
-    isMobile: Boolean
+    useUtc: Boolean
   },
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
-      utils: constructedDateUtils,
-      selectedMonth: new Date(this.pageDate).getMonth(),
-      selectedMonthInit: new Date(this.pageDate).getMonth()
+      utils: constructedDateUtils
     }
   },
   computed: {
-    fMonths() {
-      return this.months.map(v => ({
-        value: v, name: v.month, id: v.id, disabled: v.isDisabled
-      }))
-    },
     months () {
       const d = this.pageDate
       let months = []
@@ -76,8 +54,7 @@ export default {
           month: this.utils.getMonthName(i, this.translation.months),
           timestamp: dObj.getTime(),
           isSelected: this.isSelectedMonth(dObj),
-          isDisabled: this.isDisabledMonth(dObj),
-          id: i
+          isDisabled: this.isDisabledMonth(dObj)
         })
         this.utils.setMonth(dObj, this.utils.getMonth(dObj) + 1)
       }
@@ -116,9 +93,7 @@ export default {
      * @param {Object} month
      */
     selectMonth (month) {
-      this.selectedMonth = new Date(month.timestamp).getMonth()
       if (month.isDisabled) {
-        this.$emit('month:disabled', {month})
         return false
       }
       this.$emit('selectMonth', month)

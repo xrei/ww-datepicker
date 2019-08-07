@@ -1,66 +1,34 @@
 <template>
-  <div v-if="!isMobile" :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" :style="calendarStyle" @mousedown.prevent>
+  <div :class="[calendarClass, 'vdp-datepicker__calendar']" v-show="showDayView" :style="calendarStyle" @mousedown.prevent>
     <slot name="beforeCalendarHeader"></slot>
-    <header class="vdp__header">
-      <Arrow
-        class="prev"
-        :class="{'disabled': isLeftNavDisabled}"
-        :right="true"
+    <header>
+      <span
         @click="isRtl ? nextMonth() : previousMonth()"
-      />
-      <span class="day__month_btn middle__btn"
-        @click="showMonthCalendar"
-        :class="allowedToShowView('month') ? 'up' : ''"
-      >
-      {{ isYmd ? currYearName : currMonthName }} {{ isYmd ? currMonthName : currYearName }}
-      </span>
-      
-      <Arrow 
+        class="prev"
+        :class="{'disabled': isLeftNavDisabled}">&lt;</span>
+      <span class="day__month_btn" @click="showMonthCalendar" :class="allowedToShowView('month') ? 'up' : ''">{{ isYmd ? currYearName : currMonthName }} {{ isYmd ? currMonthName : currYearName }}</span>
+      <span
         @click="isRtl ? previousMonth() : nextMonth()"
         class="next"
-        :class="{'disabled': isRightNavDisabled}"
-        :left="true"
-      />
+        :class="{'disabled': isRightNavDisabled}">&gt;</span>
     </header>
     <div :class="isRtl ? 'flex-rtl' : ''">
-      <div class="days-header">
-        <span class="cell day-header" v-for="d in daysOfWeek" :key="d.timestamp">{{ d }}</span>
-      </div>
-      <div class="exist-days">
-        <template v-if="blankDays > 0">
-          <span class="cell blank"
-            v-for="d in blankDays" :key="d.timestamp"></span>
-        </template>
-        <span class="cell day"
+      <span class="cell day-header" v-for="d in daysOfWeek" :key="d.timestamp">{{ d }}</span>
+      <template v-if="blankDays > 0">
+        <span class="cell day blank" v-for="d in blankDays" :key="d.timestamp"></span>
+      </template><!--
+      --><span class="cell day"
           v-for="day in days"
           :key="day.timestamp"
           :class="dayClasses(day)"
           v-html="dayCellContent(day)"
           @click="selectDate(day)"></span>
-      </div>
     </div>
-  </div>
-  <div v-else class="vdp-day__mobile">
-    <VPicker
-      :initial="selectedDay"
-      :options="fDays"
-      @input="selectDate($event)"
-    />
   </div>
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
-import Arrow from './Arrow.vue'
-import VPicker from './VPicker/'
-
-const getDay = (n, monFst) => {
-  if (monFst) {
-    return n === 0 ? 6 : n - 1
-  } else return n
-}
-
 export default {
-  components: {Arrow, VPicker},
   props: {
     showDayView: Boolean,
     selectedDate: Date,
@@ -79,39 +47,15 @@ export default {
     translation: Object,
     isRtl: Boolean,
     mondayFirst: Boolean,
-    useUtc: Boolean,
-    isMobile: Boolean,
-    initialDay: Number
-  },
-  mounted() {
-    this.selectedDay = this.initialDay
-  },
-  watch: {
-    pageTimestamp(v) {
-      if (this.days.some(v => v.isDisabled)) {
-        let fday = this.days.find(v => !v.isDisabled)
-        this.selectedDay = (fday && fday.date) || 1
-        console.log(fday, 'huy')
-      }
-    }
+    useUtc: Boolean
   },
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
-      utils: constructedDateUtils,
-      selectedDay: this.initialDay
+      utils: constructedDateUtils
     }
   },
   computed: {
-    fDays() {
-      return this.days.map(v => ({
-        value: v,
-        name: v.date,
-        label: v.dayOfW,
-        id: v.id,
-        disabled: v.isDisabled
-      }))
-    },
     /**
      * Returns an array of day names
      * @return {String[]}
@@ -162,9 +106,7 @@ export default {
           isToday: this.utils.compareDates(dObj, new Date()),
           isWeekend: this.utils.getDay(dObj) === 0 || this.utils.getDay(dObj) === 6,
           isSaturday: this.utils.getDay(dObj) === 6,
-          isSunday: this.utils.getDay(dObj) === 0,
-          id: this.utils.getDate(dObj),
-          dayOfW: this.daysOfWeek[getDay(this.utils.getDay(dObj), this.mondayFirst)]
+          isSunday: this.utils.getDay(dObj) === 0
         })
         this.utils.setDate(dObj, this.utils.getDate(dObj) + 1)
       }
@@ -213,11 +155,7 @@ export default {
     }
   },
   methods: {
-    compareExistDays (day) {
-      return [1, 2, 3, 4, 5, 6, 7].includes(day.date)
-    },
     selectDate (date) {
-      this.selectedDay = date.date
       if (date.isDisabled) {
         this.$emit('selectedDisabled', date)
         return false
@@ -393,8 +331,7 @@ export default {
         'sat': day.isSaturday,
         'sun': day.isSunday,
         'highlight-start': day.isHighlightStart,
-        'highlight-end': day.isHighlightEnd,
-        'fst-act-svn-days': this.compareExistDays(day)
+        'highlight-end': day.isHighlightEnd
       }
     },
     /**

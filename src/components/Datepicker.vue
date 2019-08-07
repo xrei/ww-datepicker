@@ -29,132 +29,68 @@
       <slot name="afterDateInput" slot="afterDateInput"></slot>
     </date-input>
 
-    <template v-if="!isMobilePicker">
-      <!-- Day View -->
-      <picker-day
-        v-if="allowedToShowView('day')"
-        :pageDate="pageDate"
-        :selectedDate="selectedDate"
-        :showDayView="showDayView"
-        :fullMonthName="fullMonthName"
-        :allowedToShowView="allowedToShowView"
-        :disabledDates="disabledDates"
-        :highlighted="highlighted"
-        :calendarClass="calendarClass"
-        :calendarStyle="calendarStyle"
-        :translation="translation"
-        :pageTimestamp="pageTimestamp"
-        :isRtl="isRtl"
-        :mondayFirst="mondayFirst"
-        :dayCellContent="dayCellContent"
-        :use-utc="useUtc"
-        @changedMonth="handleChangedMonthFromDayPicker"
-        @selectDate="selectDate"
-        @showMonthCalendar="showMonthCalendar"
-        @selectedDisabled="selectDisabledDate">
-        <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
-      </picker-day>
 
-      <!-- Month View -->
-      <picker-month
-        v-if="allowedToShowView('month')"
-        :pageDate="pageDate"
-        :selectedDate="selectedDate"
-        :showMonthView="showMonthView"
-        :allowedToShowView="allowedToShowView"
-        :disabledDates="disabledDates"
-        :calendarClass="calendarClass"
-        :calendarStyle="calendarStyle"
-        :translation="translation"
-        :isRtl="isRtl"
-        :use-utc="useUtc"
-        @selectMonth="selectMonth"
-        @showYearCalendar="showYearCalendar"
-        @changedYear="setPageDate">
-        <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
-      </picker-month>
+    <!-- Day View -->
+    <picker-day
+      v-if="allowedToShowView('day')"
+      :pageDate="pageDate"
+      :selectedDate="selectedDate"
+      :showDayView="showDayView"
+      :fullMonthName="fullMonthName"
+      :allowedToShowView="allowedToShowView"
+      :disabledDates="disabledDates"
+      :highlighted="highlighted"
+      :calendarClass="calendarClass"
+      :calendarStyle="calendarStyle"
+      :translation="translation"
+      :pageTimestamp="pageTimestamp"
+      :isRtl="isRtl"
+      :mondayFirst="mondayFirst"
+      :dayCellContent="dayCellContent"
+      :use-utc="useUtc"
+      @changedMonth="handleChangedMonthFromDayPicker"
+      @selectDate="selectDate"
+      @showMonthCalendar="showMonthCalendar"
+      @selectedDisabled="selectDisabledDate">
+      <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
+    </picker-day>
 
-      <!-- Year View -->
-      <picker-year
-        v-if="allowedToShowView('year')"
-        :pageDate="pageDate"
-        :selectedDate="selectedDate"
-        :showYearView="showYearView"
-        :allowedToShowView="allowedToShowView"
-        :disabledDates="disabledDates"
-        :calendarClass="calendarClass"
-        :calendarStyle="calendarStyle"
-        :translation="translation"
-        :isRtl="isRtl"
-        :use-utc="useUtc"
-        @selectYear="selectYear"
-        @changedDecade="setPageDate">
-        <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
-      </picker-year>
-    </template>
+    <!-- Month View -->
+    <picker-month
+      v-if="allowedToShowView('month')"
+      :pageDate="pageDate"
+      :selectedDate="selectedDate"
+      :showMonthView="showMonthView"
+      :allowedToShowView="allowedToShowView"
+      :disabledDates="disabledDates"
+      :calendarClass="calendarClass"
+      :calendarStyle="calendarStyle"
+      :translation="translation"
+      :isRtl="isRtl"
+      :use-utc="useUtc"
+      @selectMonth="selectMonth"
+      @showYearCalendar="showYearCalendar"
+      @changedYear="setPageDate">
+      <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
+    </picker-month>
 
-    <div v-if="isMobilePicker && mobileView"
-      class="mobile-view"
-    >
-      <picker-year
-        class="mobile-view__item"
-        :isMobile="isMobilePicker"
-        :pageDate="pageDate"
-        :selectedDate="selectedDate"
-        :showYearView="showYearView"
-        :allowedToShowView="allowedToShowView"
-        :disabledDates="disabledDates"
-        :calendarClass="calendarClass"
-        :calendarStyle="calendarStyle"
-        :translation="translation"
-        :isRtl="isRtl"
-        :use-utc="useUtc"
-        @selectYear="selectYear"
-        @changedDecade="setPageDate"
-      />
-      <picker-month
-        class="mobile-view__item"
-        :isMobile="isMobilePicker"
-        :pageDate="pageDate"
-        :selectedDate="selectedDate"
-        :showMonthView="showMonthView"
-        :allowedToShowView="allowedToShowView"
-        :disabledDates="disabledDates"
-        :calendarClass="calendarClass"
-        :calendarStyle="calendarStyle"
-        :translation="translation"
-        :isRtl="isRtl"
-        :use-utc="useUtc"
-        @selectMonth="selectMonth"
-        @showYearCalendar="showYearCalendar"
-        @changedYear="setPageDate"
-        @month:disabled="onPickDisabled"
-      />
-      <picker-day
-        class="mobile-view__item"
-        :isMobile="isMobilePicker"
-        :pageDate="pageDate"
-        :selectedDate="selectedDate"
-        :showDayView="showDayView"
-        :fullMonthName="fullMonthName"
-        :allowedToShowView="allowedToShowView"
-        :disabledDates="disabledDates"
-        :highlighted="highlighted"
-        :calendarClass="calendarClass"
-        :calendarStyle="calendarStyle"
-        :translation="translation"
-        :pageTimestamp="pageTimestamp"
-        :isRtl="isRtl"
-        :mondayFirst="mondayFirst"
-        :dayCellContent="dayCellContent"
-        :use-utc="useUtc"
-        :initialDay="selected.day.date || 1"
-        @changedMonth="handleChangedMonthFromDayPicker"
-        @selectDate="selectDate"
-        @showMonthCalendar="showMonthCalendar"
-        @selectedDisabled="selectDisabledDate"
-      />
-    </div>
+    <!-- Year View -->
+    <picker-year
+      v-if="allowedToShowView('year')"
+      :pageDate="pageDate"
+      :selectedDate="selectedDate"
+      :showYearView="showYearView"
+      :allowedToShowView="allowedToShowView"
+      :disabledDates="disabledDates"
+      :calendarClass="calendarClass"
+      :calendarStyle="calendarStyle"
+      :translation="translation"
+      :isRtl="isRtl"
+      :use-utc="useUtc"
+      @selectYear="selectYear"
+      @changedDecade="setPageDate">
+      <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
+    </picker-year>
   </div>
 </template>
 <script>
@@ -164,9 +100,6 @@ import PickerDay from './PickerDay.vue'
 import PickerMonth from './PickerMonth.vue'
 import PickerYear from './PickerYear.vue'
 import utils, { makeDateUtils } from '../utils/DateUtils'
-
-const getTime = date => +new Date(date)
-
 export default {
   components: {
     DateInput,
@@ -250,13 +183,7 @@ export default {
        */
       calendarHeight: 0,
       resetTypedDate: new Date(),
-      utils: constructedDateUtils,
-      mobileView: false,
-      selected: {
-        year: {},
-        month: {},
-        day: {}
-      }
+      utils: constructedDateUtils
     }
   },
   watch: {
@@ -271,9 +198,6 @@ export default {
     }
   },
   computed: {
-    isMobilePicker () {
-      return window && window.innerWidth <= 375
-    },
     computedInitialView () {
       if (!this.initialView) {
         return this.minimumView
@@ -302,23 +226,9 @@ export default {
     },
     isRtl () {
       return this.translation.rtl === true
-    },
-    actualDate() {
-      return {
-        year: new Date(this.selected.year.timestamp).getFullYear(),
-        month: new Date(this.selected.month.timestamp).getMonth(),
-        date: new Date(this.selected.day.timestamp).getDate()
-      }
     }
   },
   methods: {
-    onPickDisabled(val) {
-      let d = new Date(this.pageDate)
-      if (val.month) {
-        let m = new Date(val.month.timestamp).getMonth() + 1
-        this.pageTimestamp = d.setMonth(m)
-      }
-    },
     /**
      * Called in the event that the user navigates to date pages and
      * closes the picker without selecting a date.
@@ -335,10 +245,6 @@ export default {
      * @return {mixed}
      */
     showCalendar () {
-      if (this.isMobilePicker) {
-        this.mobileView = true
-        return
-      }
       if (this.disabled || this.isInline) {
         return false
       }
@@ -351,10 +257,6 @@ export default {
      * Sets the initial picker page view: day, month or year
      */
     setInitialView () {
-      if (this.isMobilePicker) {
-        this.mobileView = true
-        return
-      }
       const initialView = this.computedInitialView
       if (!this.allowedToShowView(initialView)) {
         throw new Error(`initialView '${this.initialView}' cannot be rendered based on minimum '${this.minimumView}' and maximum '${this.maximumView}'`)
@@ -445,14 +347,8 @@ export default {
      * @param {Object} date
      */
     selectDate (date) {
-      if (this.isMobilePicker) {
-        this.selected.day = date
-        this.combineDates()
-        this.resetTypedDate = new Date()
-        return
-      }
       this.setDate(date.timestamp)
-      if (!this.isInline && !this.isMobilePicker) {
+      if (!this.isInline) {
         this.close(true)
       }
       this.resetTypedDate = new Date()
@@ -463,38 +359,11 @@ export default {
     selectDisabledDate (date) {
       this.$emit('selectedDisabled', date)
     },
-    lastDayOfMonth(y, m) {
-      let t = new Date(y, m, 0)
-      console.log(m)
-      console.log(t)
-      return t.getDate()
-    },
-    combineDates() {
-      let makeDay = (y, m, day) => {
-        let lastDay = this.lastDayOfMonth(y, m)
-        return day >= lastDay ? lastDay : day
-      }
-
-      const year = this.actualDate.year
-      const month = this.actualDate.month
-      const day = makeDay(year, month, this.actualDate.date)
-      const date = new Date(year, month, day)
-      this.selectedDate = date
-
-      this.setPageDate(date)
-      this.$emit('selected', date)
-      this.$emit('input', date)
-    },
     /**
      * @param {Object} month
      */
     selectMonth (month) {
       const date = new Date(month.timestamp)
-      if (this.isMobilePicker) {
-        this.selected.month = month
-        this.combineDates()
-        return
-      }
       if (this.allowedToShowView('day')) {
         this.setPageDate(date)
         this.$emit('changedMonth', month)
@@ -508,11 +377,6 @@ export default {
      */
     selectYear (year) {
       const date = new Date(year.timestamp)
-      if (this.isMobilePicker) {
-        this.selected.year = year
-        this.combineDates()
-        return
-      }
       if (this.allowedToShowView('month')) {
         this.setPageDate(date)
         this.$emit('changedYear', year)
@@ -549,8 +413,7 @@ export default {
           date = new Date()
         }
       }
-      // this.pageTimestamp = this.utils.setDate(new Date(date), 1)
-      this.pageTimestamp = +new Date(date)
+      this.pageTimestamp = this.utils.setDate(new Date(date), 1)
     },
     /**
      * Handles a month change from the day picker
@@ -570,10 +433,6 @@ export default {
      * @param {Boolean} emitEvent - emit close event
      */
     close (emitEvent) {
-      if (this.isMobilePicker) {
-        this.mobileView = false
-        return
-      }
       this.showDayView = this.showMonthView = this.showYearView = false
       if (!this.isInline) {
         if (emitEvent) {
@@ -588,19 +447,10 @@ export default {
     init () {
       if (this.value) {
         this.setValue(this.value)
-        this.initSelected()
       }
       if (this.isInline) {
         this.setInitialView()
       }
-    },
-    initSelected() {
-      this.selected.year.timestamp = getTime(this.value)
-      this.selected.year.year = new Date(this.value).getFullYear()
-      this.selected.month.timestamp = getTime(this.value)
-      this.selected.month.month = new Date(this.value).getMonth()
-      this.selected.day.timestamp = getTime(this.value)
-      this.selected.day.date = new Date(this.value).getDate()
     }
   },
   mounted () {
