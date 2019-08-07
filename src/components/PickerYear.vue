@@ -24,7 +24,8 @@
       @click.stop="selectYear(year)">{{ year.year }}</span>
   </div>
   <div v-else class="vdp-year__mobile">	
-    <VPicker	
+    <VPicker
+      :initial="initialYear"
       :options="fYears"	
       @input="selectYear($event)"	
     />	
@@ -38,6 +39,7 @@ import VPicker from './VPicker/'
 export default {
   components: {Arrow, VPicker},
   props: {
+    mDate: Number,
     isMobile: Boolean,
     showYearView: Boolean,
     selectedDate: Date,
@@ -51,6 +53,16 @@ export default {
     isRtl: Boolean,
     allowedToShowView: Function,
     useUtc: Boolean
+  },
+  async mounted() {
+    await this.$nextTick()
+    this.initialYear = new Date(this.mDate).getFullYear()
+  },
+  watch: {
+    mDate(v) {
+      let y = new Date(v).getDate()
+      this.initialYear = y
+    }
   },
   computed: {
     fYears() {
@@ -105,7 +117,8 @@ export default {
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
-      utils: constructedDateUtils
+      utils: constructedDateUtils,
+      initialYear: 0
     }
   },
   methods: {

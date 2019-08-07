@@ -24,7 +24,7 @@
   </div>
   <div v-else class="vdp-month__mobile">	
     <VPicker	
-      :initial="0"
+      :initial="initialMonth"
       :options="fMonths"	
       @input="selectMonth($event)"	
     />	
@@ -40,6 +40,7 @@ const getMaxDays = (m, y) => new Date(y, m + 1, 0).getDate()
 export default {
   components: {Arrow, VPicker},
   props: {
+    mDate: Number,
     isMobile: Boolean,
     showMonthView: Boolean,
     selectedDate: Date,
@@ -53,10 +54,21 @@ export default {
     allowedToShowView: Function,
     useUtc: Boolean
   },
+  async mounted() {
+    await this.$nextTick()
+    this.initialMonth = new Date(this.pageDate).getMonth()
+  },
+  watch: {
+    mDate(v) {
+      let m = new Date(v).getDate()
+      this.initialMonth = m
+    }
+  },
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
-      utils: constructedDateUtils
+      utils: constructedDateUtils,
+      initialMonth: 0
     }
   },
   computed: {

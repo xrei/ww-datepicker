@@ -26,18 +26,18 @@ export default {
     placeholder: String
   },
   data() {
-    let lastIndex = this.placeholder ? -1 : 0
-    if (this.value) {
-      this.options.forEach((option, index) => {
-        if (option === this.value || option.value === this.value) {
-          lastIndex = index
-        }
-      })
-    }
+    // let lastIndex = this.placeholder ? -1 : 0
+    // if (this.value) {
+    //   this.options.forEach((option, index) => {
+    //     if (option === this.value || option.value === this.value) {
+    //       lastIndex = index
+    //     }
+    //   })
+    // }
     return {
       top: 0,
       pivots: null,
-      lastIndex: lastIndex,
+      lastIndex: 0,
       transitioning: false,
       transitionTO: null,
       startTop: null,
@@ -49,15 +49,17 @@ export default {
     }
   },
   beforeMount() {
+    this.lastIndex = this.initial
+  },
+  async mounted() {
+    await this.$nextTick()
     if (this.initial) {
       this.options.map((v, i) => {
-        if (v.value.id === this.initial || v.name === this.initial) {
+        if (v.id === this.initial) {
           this.lastIndex = i
         }
       })
     }
-  },
-  mounted() {
     // if (isTouchable) {
     this.$el.addEventListener('touchstart', this.onStart)
     this.$el.addEventListener('touchmove', this.onTouchMove)
@@ -113,9 +115,7 @@ export default {
   },
   watch: {
     initial(v) {
-      let idx = v - 1
-      this.lastIndex = idx
-      this.correction(idx)
+
     },
     value(newValue, oldValue) {
       let foundIndex = -1
@@ -126,9 +126,16 @@ export default {
         this.correction(foundIndex)
       }
     },
-    optLen() {
+    optLen(v) {
       this.$nextTick(() => {
         this.calculatePivots()
+        const maxIdx = v - 1
+        if (this.lastIndex >= maxIdx) {
+          this.correction(maxIdx)
+          return
+        } else {
+          this.correction(this.lastIndex)
+        }
       })
     }
   },

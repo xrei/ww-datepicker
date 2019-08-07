@@ -31,6 +31,7 @@
   </div>
   <div v-else class="vdp-day__mobile">	
     <VPicker	
+      :initial="initialDay"
       :options="fDays"	
       @input="selectDate($event)"	
     />	
@@ -50,6 +51,7 @@ const getDay = (n, monFst) => {
 export default {
   components: {Arrow, VPicker},
   props: {
+    mDate: Number,
     isMobile: Boolean,
     showDayView: Boolean,
     selectedDate: Date,
@@ -70,10 +72,21 @@ export default {
     mondayFirst: Boolean,
     useUtc: Boolean
   },
+  async mounted() {
+    await this.$nextTick()
+    this.initialDay = new Date(this.mDate).getDate()
+  },
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     return {
-      utils: constructedDateUtils
+      utils: constructedDateUtils,
+      initialDay: 0
+    }
+  },
+  watch: {
+    mDate(v) {
+      let day = new Date(v).getDate()
+      this.initialDay = day
     }
   },
   computed: {

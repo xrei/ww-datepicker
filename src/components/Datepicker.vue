@@ -95,6 +95,7 @@
   <div v-if="isMobile" class="mobile-view">
     <picker-year
       class="mobile-view__item"
+      :mDate="mobSelected.unix"
       :isMobile="isMobile"
       :pageDate="pageDate"
       :selectedDate="selectedDate"
@@ -110,6 +111,7 @@
     />
     <picker-month
       class="mobile-view__item"
+      :mDate="mobSelected.unix"
       :isMobile="isMobile"
       :pageDate="pageDate"
       :selectedDate="selectedDate"
@@ -124,7 +126,8 @@
       @selectMonth="mobileSelMonth"
     />
     <picker-day
-      class="mobile-view__item"	
+      class="mobile-view__item"
+      :mDate="mobSelected.unix"
       :isMobile="isMobile"
       :pageDate="pageDate"
       :selectedDate="selectedDate"
@@ -261,7 +264,7 @@ export default {
       this.setInitialView()
     },
     mobDateWatch() {
-      console.log('trgg')
+      // console.log('trgg', this.mobSelected.date)
       this.setDate(this.mobSelected.date)
     }
   },
@@ -430,7 +433,7 @@ export default {
 
       let max = this.mobSelected.month.maxDays
       if (date.maxDays >= max) {
-        this.mobileSelDay({date: date.maxDays})
+        this.mobileSelDay({date: this.mobSelected.day.date})
       }
 
       this.mobSelected.date.setMonth(date.id)
