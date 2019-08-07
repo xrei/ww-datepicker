@@ -13,18 +13,20 @@ export default [{
     {
       file: 'dist/vuejs-datepicker.js',
       format: 'umd',
+      exports: 'named',
       name: 'vuejsDatepicker'
     },
     {
       file: 'dist/vuejs-datepicker.common.js',
+      exports: 'named',
       format: 'cjs'
     },
     {
       file: 'dist/vuejs-datepicker.esm.js',
+      exports: 'named',
       format: 'es'
     }
   ],
-  exports: 'named',
   plugins: [
     vue({css: true}),
     postcss({plugins: [autoprefixer()]}),
