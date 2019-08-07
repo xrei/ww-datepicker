@@ -128,6 +128,7 @@
         @selectMonth="selectMonth"
         @showYearCalendar="showYearCalendar"
         @changedYear="setPageDate"
+        @month:disabled="onPickDisabled"
       />
       <picker-day
         class="mobile-view__item"
@@ -147,7 +148,7 @@
         :mondayFirst="mondayFirst"
         :dayCellContent="dayCellContent"
         :use-utc="useUtc"
-        :initialDay="selected.day.date"
+        :initialDay="selected.day.date || 1"
         @changedMonth="handleChangedMonthFromDayPicker"
         @selectDate="selectDate"
         @showMonthCalendar="showMonthCalendar"
@@ -301,9 +302,23 @@ export default {
     },
     isRtl () {
       return this.translation.rtl === true
+    },
+    actualDate() {
+      return {
+        year: new Date(this.selected.year.timestamp).getFullYear(),
+        month: new Date(this.selected.month.timestamp).getMonth(),
+        date: new Date(this.selected.day.timestamp).getDate()
+      }
     }
   },
   methods: {
+    onPickDisabled(val) {
+      let d = new Date(this.pageDate)
+      if (val.month) {
+        let m = new Date(val.month.timestamp).getMonth() + 1
+        this.pageTimestamp = d.setMonth(m)
+      }
+    },
     /**
      * Called in the event that the user navigates to date pages and
      * closes the picker without selecting a date.
@@ -448,13 +463,24 @@ export default {
     selectDisabledDate (date) {
       this.$emit('selectedDisabled', date)
     },
+    lastDayOfMonth(y, m) {
+      let t = new Date(y, m, 0)
+      console.log(m)
+      console.log(t)
+      return t.getDate()
+    },
     combineDates() {
-      let makeDate = t => t ? new Date(t) : new Date()
-      const year = makeDate(this.selected.year.timestamp).getFullYear()
-      const month = makeDate(this.selected.month.timestamp).getMonth()
-      const day = makeDate(this.selected.day.timestamp).getDate()
+      let makeDay = (y, m, day) => {
+        let lastDay = this.lastDayOfMonth(y, m)
+        return day >= lastDay ? lastDay : day
+      }
+
+      const year = this.actualDate.year
+      const month = this.actualDate.month
+      const day = makeDay(year, month, this.actualDate.date)
       const date = new Date(year, month, day)
       this.selectedDate = date
+
       this.setPageDate(date)
       this.$emit('selected', date)
       this.$emit('input', date)

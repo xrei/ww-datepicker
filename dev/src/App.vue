@@ -10,6 +10,11 @@
       inputClass="datepicker-input"
       inline
     />
+
+    <!-- <MobilePicker
+      :value="date"
+      @input="handleDate"
+    /> -->
     <br>
     {{ date.toString() }}
   </div>
@@ -17,22 +22,28 @@
 
 <script>
 import Datepicker from '../../src/components/Datepicker.vue'
+import MobilePicker from '../../src/components/MobilePicker/MobilePicker.vue'
 import * as lang from '../../src/locale/index.js'
 
 export default {
   name: 'app',
   components: {
-    Datepicker
+    Datepicker, MobilePicker
   },
   data: () => ({
-    date: '',
+    date: new Date(),
     langs: lang,
     lang: 'ru',
     disabledDates: {
-      to: new Date('2019-08-20'),
+      // to: new Date('2019-08-20'),
       // from: new Date('2023-09-20'),
     }
-  })
+  }),
+  methods: {
+    handleDate(e) {
+      this.date = e
+    }
+  }
 }
 </script>
 

@@ -118,6 +118,7 @@ export default {
     selectMonth (month) {
       this.selectedMonth = new Date(month.timestamp).getMonth()
       if (month.isDisabled) {
+        this.$emit('month:disabled', {month})
         return false
       }
       this.$emit('selectMonth', month)

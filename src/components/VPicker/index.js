@@ -107,8 +107,16 @@ export default {
         }
       })
     },
+    optLen() {
+      return this.options.length
+    }
   },
   watch: {
+    initial(v) {
+      let idx = v - 1
+      this.lastIndex = idx
+      this.correction(idx)
+    },
     value(newValue, oldValue) {
       let foundIndex = -1
       this.sanitizedOptions.forEach((option, index) => {
@@ -118,10 +126,10 @@ export default {
         this.correction(foundIndex)
       }
     },
-    options() {
-      // this.$nextTick(() => {
-      //   // this.calculatePivots()
-      // })
+    optLen() {
+      this.$nextTick(() => {
+        this.calculatePivots()
+      })
     }
   },
   methods: {
@@ -246,7 +254,7 @@ export default {
     },
     correction(index) {
       index = Math.min(Math.max(index, this.placeholder ? -1 : 0), this.pivots.length - 1)
-      if (this.lastIndex !== index) {
+      if (this.lastIndex !== index && index < this.sanitizedOptions.length) {
         this.lastIndex = index
         this.$emit('input', index > -1 ? this.sanitizedOptions[index].value : null)
       }

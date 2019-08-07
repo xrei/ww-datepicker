@@ -42,7 +42,7 @@
   </div>
   <div v-else class="vdp-day__mobile">
     <VPicker
-      :initial="initialDay"
+      :initial="selectedDay"
       :options="fDays"
       @input="selectDate($event)"
     />
@@ -85,6 +85,15 @@ export default {
   },
   mounted() {
     this.selectedDay = this.initialDay
+  },
+  watch: {
+    pageTimestamp(v) {
+      if (this.days.some(v => v.isDisabled)) {
+        let fday = this.days.find(v => !v.isDisabled)
+        this.selectedDay = (fday && fday.date) || 1
+        console.log(fday, 'huy')
+      }
+    }
   },
   data () {
     const constructedDateUtils = makeDateUtils(this.useUtc)
