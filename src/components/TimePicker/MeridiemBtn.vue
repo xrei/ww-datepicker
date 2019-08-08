@@ -1,5 +1,5 @@
 <template>
-  <div :class="classes" @click="onClick(meridiem)">
+  <div :class="classes" @click.self="onClick(meridiem)">
     {{ meridiem }}
   </div>
 </template>

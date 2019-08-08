@@ -1,5 +1,5 @@
 <template>
-  <div class="tp__container">
+  <div class="tp__container" @click.prevent @mousedown.prevent>
     <div v-if="$slots.left" class="left">
       <slot name="left"></slot>
     </div>
@@ -131,6 +131,7 @@ export default {
 
 <style lang="scss">
 .tp__container {
+  z-index: 10;
   background-color: #fff;
   height: 180px;
   display: flex;
