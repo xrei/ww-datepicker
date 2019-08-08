@@ -8,7 +8,6 @@
         :mondayFirst="lang==='ru'"
         :language="langs[lang]"
         :disabled-dates="disabledDates"
-        inline
         inputClass="datepicker-input"
       />
 
@@ -17,9 +16,9 @@
     </div>
     <div class="timepicker-cont">
       <TimePicker
-        inline
         v-model="time"
         :militaryTime="lang === 'ru'"
+        pickerContainerClass="tp-container"
       />
       {{ time.toString() }}
     </div>
@@ -83,5 +82,19 @@ body {
 }
 .timepicker-cont {
   max-width: 420px;
+}
+
+
+.tp-container {
+  width: 100%;
+  position: absolute;
+  max-width: 420px;
+  border: 2px solid #0070ff;
+  font-size: 30px;
+  @media screen and (min-width: 420px) {
+    font-size: 24px;
+    max-width: 200px;
+    height: 180px;
+  }
 }
 </style>

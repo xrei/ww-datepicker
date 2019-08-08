@@ -144,7 +144,7 @@ export default {
     flex: 1 1 50%;
     display: flex;
     justify-content: center;
-    font-size: 30px;
+    font-size: inherit;
     .separator {
       align-items: center;
       display: flex;

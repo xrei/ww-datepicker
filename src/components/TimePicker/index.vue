@@ -1,6 +1,6 @@
 <template>
   <div class="vtp__timepicker">
-    <div v-if="!inline">
+    <div v-if="!inline" class="input-container">
       <input
         ref="input"
         :readonly="true"
@@ -14,6 +14,7 @@
     </div>
     <PickerTime
       v-if="showOrInline && unix"
+      :class="pickerContainerClass"
       :isMilitary="militaryTime"
       :meridiem="currMeridiem"
       :selectedVal="unix"
@@ -60,7 +61,8 @@ export default {
       type: String,
       default: 'en'
     },
-    militaryTime: Boolean
+    militaryTime: Boolean,
+    pickerContainerClass: String
   },
   mounted() {
     this.init()
@@ -144,6 +146,10 @@ export default {
   * {
     box-sizing: border-box;
   }
+  .input-container {
+    position: relative;
+    max-width: 200px;
+  }
   .meridiem {
     position: absolute;
     right: 10px;
@@ -154,7 +160,6 @@ export default {
     background-color: #fff;
     font-size: 24px;
     padding: 24px;
-    max-width: 200px;
     width: 100%;
     border: none;
   }
@@ -168,7 +173,7 @@ export default {
     .tp__meridiem-btn {
       width: 64px;
       height: 40px;
-      @media screen and (min-width: 420) {
+      @media screen and (min-width: 420px) {
         width: 24px;
         height: 24px;
       }
