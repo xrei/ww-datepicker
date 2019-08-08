@@ -107,7 +107,6 @@ export default {
     }
   },
   watch: {
-
     value(newValue, oldValue) {
       let foundIndex = -1
       this.sanitizedOptions.forEach((option, index) => {
@@ -132,6 +131,10 @@ export default {
   },
   methods: {
     calculatePivots() {
+      if (!this.$refs.items || !this.$refs.selection) {
+        this.pivots = []
+        return
+      }
       const rect = this.$refs.selection.getBoundingClientRect()
       const med = (rect.top + rect.bottom) / 2
 

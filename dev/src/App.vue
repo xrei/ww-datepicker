@@ -2,22 +2,26 @@
   <div id="app">
     <div class="datepicker-cont">
       <datepicker
-        v-model="date"
+        v-model="time"
         class="picker"
         placeholder="Select Date"
         :mondayFirst="lang==='ru'"
         :language="langs[lang]"
         :disabled-dates="disabledDates"
+        inline
         inputClass="datepicker-input"
       />
 
       <br>
-      {{ date.toString() }}
+      <!-- {{ date.toString() }} -->
     </div>
     <div class="timepicker-cont">
       <TimePicker
+        inline
         v-model="time"
+        :militaryTime="lang === 'ru'"
       />
+      {{ time.toString() }}
     </div>
   </div>
 </template>
@@ -34,11 +38,11 @@ export default {
   },
   data: () => ({
     date: new Date(),
-    time: new Date(),
+    time: new Date(new Date('10 May 2019').setHours(23)),
     langs: lang,
     lang: 'en',
     disabledDates: {
-      to: new Date(),
+      // to: new Date(),
       // from: new Date('2023-09-20'),
     }
   }),
@@ -75,6 +79,9 @@ body {
 }
 
 .datepicker-cont {
-  margin-bottom: 3rem;
+  // margin-bottom: 3rem;
+}
+.timepicker-cont {
+  max-width: 420px;
 }
 </style>

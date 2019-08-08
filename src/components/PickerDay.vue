@@ -30,7 +30,7 @@
     </div>
   </div>
   <div v-else class="vdp-day__mobile">	
-    <VPicker	
+    <VPicker
       :initial="initialDay"
       :options="fDays"	
       @input="selectDate($event)"	

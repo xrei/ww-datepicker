@@ -27,13 +27,13 @@
   text-align: center;
   height: 53px;
   line-height: 53px;
-  font-size: 18px;
+  font-size: inherit;
   &.-placeholder {
     color: #aaa;
   }
   &.-selected {
     color: #000;
-    font-size: 24px;
+    font-size: inherit;
   }
   &.disabled {
     color: #aaa;
