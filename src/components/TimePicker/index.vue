@@ -119,7 +119,7 @@ export default {
       this.emitSelected(p.date)
     },
     showTime() {
-      this.show = true
+      this.show = !this.show
       this.emitShow()
     },
     onBlur() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="tp__container" @click.prevent @mousedown.prevent>
+  <div class="tp__container" @mousedown.prevent>
     <div v-if="$slots.left" class="left">
       <slot name="left"></slot>
     </div>
