@@ -40,7 +40,7 @@
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
 import VPicker from './VPicker/'
-import Arrow from './Arrow'
+import Arrow from './Arrow.vue'
 
 const getDay = (n, monFst) => {
   if (monFst) {

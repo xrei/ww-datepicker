@@ -32,7 +32,7 @@
 </template>
 <script>
 import { makeDateUtils } from '../utils/DateUtils'
-import Arrow from './Arrow'
+import Arrow from './Arrow.vue'
 import VPicker from './VPicker/'
 
 const getMaxDays = (m, y) => new Date(y, m + 1, 0).getDate()
