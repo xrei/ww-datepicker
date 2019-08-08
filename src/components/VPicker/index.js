@@ -26,18 +26,18 @@ export default {
     placeholder: String
   },
   data() {
-    // let lastIndex = this.placeholder ? -1 : 0
-    // if (this.value) {
-    //   this.options.forEach((option, index) => {
-    //     if (option === this.value || option.value === this.value) {
-    //       lastIndex = index
-    //     }
-    //   })
-    // }
+    let lastIndex = this.placeholder ? -1 : 0
+    if (this.value) {
+      this.options.forEach((option, index) => {
+        if (option === this.value || option.value === this.value) {
+          lastIndex = index
+        }
+      })
+    }
     return {
       top: 0,
       pivots: null,
-      lastIndex: 0,
+      lastIndex: lastIndex,
       transitioning: false,
       transitionTO: null,
       startTop: null,
