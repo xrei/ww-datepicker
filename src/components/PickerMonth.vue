@@ -40,7 +40,7 @@ const getMaxDays = (m, y) => new Date(y, m + 1, 0).getDate()
 export default {
   components: {Arrow, VPicker},
   props: {
-    mDate: Number,
+    mDate: [Number, Date],
     isMobile: Boolean,
     showMonthView: Boolean,
     selectedDate: Date,
@@ -54,13 +54,12 @@ export default {
     allowedToShowView: Function,
     useUtc: Boolean
   },
-  async mounted() {
-    await this.$nextTick()
-    this.initialMonth = new Date(this.pageDate).getMonth()
+  mounted() {
+    this.initialMonth = new Date(this.mDate).getMonth()
   },
   watch: {
     mDate(v) {
-      let m = new Date(v).getDate()
+      let m = new Date(v).getMonth()
       this.initialMonth = m
     }
   },

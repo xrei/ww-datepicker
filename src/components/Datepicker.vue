@@ -92,7 +92,7 @@
       <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
     </picker-year>
   </template>
-  <div v-if="isMobile" class="mobile-view">
+  <div v-if="isMobile && isMobileInline" class="mobile-view">
     <picker-year
       class="mobile-view__item"
       :mDate="mobSelected.unix"
@@ -111,7 +111,7 @@
     />
     <picker-month
       class="mobile-view__item"
-      :mDate="mobSelected.unix"
+      :mDate="value"
       :isMobile="isMobile"
       :pageDate="pageDate"
       :selectedDate="selectedDate"
@@ -220,6 +220,7 @@ export default {
     const constructedDateUtils = makeDateUtils(this.useUtc)
     const pageTimestamp = constructedDateUtils.setDate(startDate, 1)
     return {
+      mobileIsShow: false,
       /*
        * Vue cannot observe changes to a Date Object so date must be stored as a timestamp
        * This represents the first day of the current viewing month
@@ -275,6 +276,9 @@ export default {
     isMobile() {
       return window && window.innerWidth <= 375
     },
+    isMobileInline() {
+      return this.isInline ? true : this.mobileIsShow
+    },
     computedInitialView () {
       if (!this.initialView) {
         return this.minimumView
@@ -322,6 +326,10 @@ export default {
      * @return {mixed}
      */
     showCalendar () {
+      if (this.isMobile) {
+        this.mobileIsShow = true
+        return
+      }
       if (this.disabled || this.isInline) {
         return false
       }
@@ -534,6 +542,7 @@ export default {
      * @param {Boolean} emitEvent - emit close event
      */
     close (emitEvent) {
+      this.mobileIsShow = false
       this.showDayView = this.showMonthView = this.showYearView = false
       if (!this.isInline) {
         if (emitEvent) {

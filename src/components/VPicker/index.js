@@ -48,9 +48,7 @@ export default {
       scrollMax: null,
     }
   },
-  beforeMount() {
-    this.lastIndex = this.initial
-  },
+
   async mounted() {
     await this.$nextTick()
     if (this.initial) {
@@ -114,9 +112,7 @@ export default {
     }
   },
   watch: {
-    initial(v) {
 
-    },
     value(newValue, oldValue) {
       let foundIndex = -1
       this.sanitizedOptions.forEach((option, index) => {

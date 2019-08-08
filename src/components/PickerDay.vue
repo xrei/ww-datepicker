@@ -34,7 +34,7 @@
       :initial="initialDay"
       :options="fDays"	
       @input="selectDate($event)"	
-    />	
+    />
   </div>
 </template>
 <script>
@@ -72,8 +72,7 @@ export default {
     mondayFirst: Boolean,
     useUtc: Boolean
   },
-  async mounted() {
-    await this.$nextTick()
+  mounted() {
     this.initialDay = new Date(this.mDate).getDate()
   },
   data () {

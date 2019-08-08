@@ -54,13 +54,12 @@ export default {
     allowedToShowView: Function,
     useUtc: Boolean
   },
-  async mounted() {
-    await this.$nextTick()
+  mounted() {
     this.initialYear = new Date(this.mDate).getFullYear()
   },
   watch: {
     mDate(v) {
-      let y = new Date(v).getDate()
+      let y = new Date(v).getFullYear()
       this.initialYear = y
     }
   },
