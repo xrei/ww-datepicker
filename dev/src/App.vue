@@ -1,40 +1,44 @@
 <template>
   <div id="app">
-    <datepicker
-      v-model="date"
-      class="picker"
-      placeholder="Select Date"
-      :mondayFirst="lang==='ru'"
-      :language="langs[lang]"
-      :disabled-dates="disabledDates"
-      inputClass="datepicker-input"
-    />
+    <div class="datepicker-cont">
+      <datepicker
+        v-model="date"
+        class="picker"
+        placeholder="Select Date"
+        :mondayFirst="lang==='ru'"
+        :language="langs[lang]"
+        :disabled-dates="disabledDates"
+        inputClass="datepicker-input"
+      />
 
-    <!-- <MobilePicker
-      :value="date"
-      @input="handleDate"
-    /> -->
-    <br>
-    {{ date.toString() }}
+      <br>
+      {{ date.toString() }}
+    </div>
+    <div class="timepicker-cont">
+      <TimePicker
+        v-model="time"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import Datepicker from '../../src/components/Datepicker.vue'
-import MobilePicker from '../../src/components/MobilePicker/MobilePicker.vue'
+import TimePicker from '../../src/components/TimePicker'
 import * as lang from '../../src/locale/index.js'
 
 export default {
   name: 'app',
   components: {
-    Datepicker, MobilePicker
+    Datepicker, TimePicker
   },
   data: () => ({
     date: new Date(),
+    time: new Date(),
     langs: lang,
-    lang: 'ru',
+    lang: 'en',
     disabledDates: {
-      // to: new Date('2019-08-20'),
+      to: new Date(),
       // from: new Date('2023-09-20'),
     }
   }),
@@ -68,5 +72,9 @@ body {
   max-width: 230px;
   border: 1px solid #eee;
   max-height: 80px;
+}
+
+.datepicker-cont {
+  margin-bottom: 3rem;
 }
 </style>
