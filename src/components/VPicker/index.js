@@ -79,19 +79,16 @@ export default {
     }
   },
   destroyed() {
-    // if (isTouchable) {
     this.$el.removeEventListener('touchstart', this.onStart)
     this.$el.removeEventListener('touchmove', this.onTouchMove)
     this.$el.removeEventListener('touchend', this.onEnd)
     this.$el.removeEventListener('touchcancel', this.onCancel)
-  // } else {
     this.$el.removeEventListener('mousewheel', this.onScroll)
     this.$el.removeEventListener('wheel', this.onScroll) // for IE
     this.$el.removeEventListener('mousedown', this.onStart)
     this.$el.removeEventListener('mousemove', this.onMouseMove)
     this.$el.removeEventListener('mouseup', this.onEnd)
     this.$el.removeEventListener('mouseleave', this.onCancel)
-    // }
   },
   computed: {
     sanitizedOptions() {
