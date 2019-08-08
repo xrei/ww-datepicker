@@ -58,26 +58,24 @@ export default {
         }
       })
     }
-    // if (isTouchable) {
     this.$el.addEventListener('touchstart', this.onStart)
     this.$el.addEventListener('touchmove', this.onTouchMove)
     this.$el.addEventListener('touchend', this.onEnd)
     this.$el.addEventListener('touchcancel', this.onCancel)
-    // } else {
     this.$el.addEventListener('mousewheel', this.onScroll)
     this.$el.addEventListener('wheel', this.onScroll) // for IE
     this.$el.addEventListener('mousedown', this.onStart)
     this.$el.addEventListener('mousemove', this.onMouseMove)
     this.$el.addEventListener('mouseup', this.onEnd)
     this.$el.addEventListener('mouseleave', this.onCancel)
-    // }
+
     this.calculatePivots()
     this.scrollMax = this.pivots[this.pivots.length - 1] * (-1)
     if (this.lastIndex > 0) {
       this.top = this.pivots[this.lastIndex] * (-1)
     }
     if (!this.value && this.sanitizedOptions[this.lastIndex]) {
-      // this.$emit('input', this.sanitizedOptions[this.lastIndex].value)
+      this.$emit('input', this.sanitizedOptions[this.lastIndex].value)
     }
   },
   destroyed() {
