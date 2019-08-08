@@ -39,6 +39,7 @@ const swapTwelve = pred => v => {
 const getHrs = (date, isPm) => {
   if (!date) return 0
   let h = isPm ? 'H' : 'h'
+  console.log(h)
   return Number(lightFormat(new Date(date), h))
 }
 
@@ -56,7 +57,7 @@ export default {
     shouldRender: false
   }),
   mounted () {
-    this.selHour = getHrs(this.selectedVal, isPm(this.isMilitary))
+    this.selHour = getHrs(this.selectedVal, this.isMilitary)
     this.selMin = getMinutes(this.selectedVal)
     this.selectedTime = new Date(this.selectedVal)
     this.$nextTick(() => {

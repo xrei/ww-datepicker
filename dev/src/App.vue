@@ -39,7 +39,7 @@ export default {
     date: new Date(),
     time: new Date(new Date('10 May 2019').setHours(23)),
     langs: lang,
-    lang: 'en',
+    lang: 'ru',
     disabledDates: {
       // to: new Date(),
       // from: new Date('2023-09-20'),
