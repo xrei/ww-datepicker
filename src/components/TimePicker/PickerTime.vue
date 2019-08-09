@@ -132,8 +132,6 @@ export default {
 <style lang="scss">
 .tp__container {
   z-index: 10;
-  background-color: #fff;
-  height: 180px;
   display: flex;
 
   .left {

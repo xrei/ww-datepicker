@@ -5,7 +5,7 @@
         ref="input"
         :readonly="true"
         :type="inline ? 'hidden' : 'text'"
-        class="tp__input"
+        :class="{[inputClass]: inputClass, 'tp__input': true}"
         :value="fmtVal"
         @click="showTime"
         @blur="onBlur"
@@ -62,7 +62,8 @@ export default {
       default: 'en'
     },
     militaryTime: Boolean,
-    pickerContainerClass: String
+    pickerContainerClass: String,
+    inputClass: String
   },
   mounted() {
     this.init()
@@ -157,11 +158,7 @@ export default {
     transform: translate(0, -50%);
   }
   .tp__input {
-    background-color: #fff;
-    font-size: 24px;
-    padding: 24px;
     width: 100%;
-    border: none;
   }
 
   .btn-container {

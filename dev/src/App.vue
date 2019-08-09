@@ -19,6 +19,7 @@
         v-model="time"
         :militaryTime="lang === 'ru'"
         pickerContainerClass="tp-container"
+        inputClass="tp-input"
       />
       {{ time.toString() }}
     </div>
@@ -72,7 +73,7 @@ body {
   padding: 26px;
   font-size: 24px;
   line-height: 1.33;
-  max-width: 230px;
+  max-width: 200px;
   border: 1px solid #eee;
   max-height: 80px;
 }
@@ -85,7 +86,13 @@ body {
 }
 
 
+.tp-input {
+  border: 1px solid #eee;
+  font-size: 24px;
+  padding: 24px;
+}
 .tp-container {
+  background-color: #fff;
   width: 100%;
   position: absolute;
   max-width: 420px;
