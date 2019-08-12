@@ -27,6 +27,7 @@ export default [{
       format: 'es'
     }
   ],
+  external: ['date-fns'],
   plugins: [
     vue({css: true}),
     postcss({plugins: [autoprefixer()]}),
@@ -39,7 +40,10 @@ export default [{
   output: {
     file: 'dist/vuejs-datepicker.min.js',
     format: 'umd',
-    name: 'vuejsDatepicker'
+    name: 'vuejsDatepicker',
+    globals: {
+      'date-fns': 'dateFns'
+    },
   },
   plugins: [
     vue({css: true}),
