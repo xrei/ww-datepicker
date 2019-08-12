@@ -141,7 +141,7 @@ export default {
         let d = new Date(date)
         date = isValid(d) ? d : null
       }
-      console.log(date)
+
       if (!date) {
         this.selectedVal = new Date()
         this.setMeridiem(new Date())

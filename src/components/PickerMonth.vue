@@ -129,7 +129,7 @@ export default {
      * @param {Object} month
      */
     selectMonth (month) {
-      if (month.isDisabled) {
+      if (month.isDisabled && !this.isMobile) {
         return false
       }
       this.$emit('selectMonth', month)

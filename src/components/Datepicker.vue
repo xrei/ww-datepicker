@@ -415,6 +415,10 @@ export default {
       const date = new Date(timestamp)
       this.selectedDate = date
       this.setPageDate(date)
+      const someOfDisabled = this.mobSelected.year.isDisabled || this.mobSelected.month.isDisabled || this.isDayDisabledInMonth(date)
+      if (someOfDisabled) {
+        return
+      }
       this.$emit('selected', date)
       this.$emit('input', date)
     },
@@ -428,7 +432,20 @@ export default {
       this.$emit('input', null)
       this.$emit('cleared')
     },
+    isDayDisabledInMonth(date) {
+      // Currently works only with disalbed to some date
+      // $todo: make it work with disabled from
+      const disabledToDay = new Date(this.disabledDates.to).getDate()
+      const disabledToMonth = new Date(this.disabledDates.to).getMonth()
+      const month = new Date(date).getMonth()
+      const day = new Date(date).getDate()
 
+      if (month === disabledToMonth) {
+        if (day >= disabledToDay) return false
+        else return true
+      }
+      return false
+    },
     mobileSelDay(date) {
       this.mobSelected.day = date
       let max = this.mobSelected.month.maxDays
@@ -441,7 +458,9 @@ export default {
 
       let max = this.mobSelected.month.maxDays
       if (date.maxDays >= max) {
-        this.mobileSelDay({date: this.mobSelected.day.date})
+        this.mobileSelDay({
+          date: this.mobSelected.day.date
+        })
       }
 
       this.mobSelected.date.setMonth(date.id)

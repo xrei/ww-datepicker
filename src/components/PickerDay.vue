@@ -200,7 +200,7 @@ export default {
   },
   methods: {
     selectDate (date) {
-      if (date.isDisabled) {
+      if (date.isDisabled && !this.isMobile) {
         this.$emit('selectedDisabled', date)
         return false
       }
