@@ -1,6 +1,8 @@
 <template>
   <div class="vtp__timepicker">
-    <div v-if="!inline" class="input-container">
+    <div v-if="!inline"
+      :class="{[inputContClass]: inputContClass, 'input-container': true}"
+    >
       <input
         ref="input"
         :readonly="true"
@@ -18,9 +20,10 @@
       :isMilitary="militaryTime"
       :meridiem="currMeridiem"
       :selectedVal="unix"
+      :style="containerStyles"
       @time:changed="handleTimeChange"
     >
-      <template v-if="currMeridiem" #left>
+      <template v-if="currMeridiem && windowWidth <= 420" #left>
         <div class="btn-container">
           <MeridiemBtn
             am
@@ -31,6 +34,12 @@
       </template>
       <template v-if="currMeridiem" #right>
         <div class="btn-container">
+          <MeridiemBtn
+            v-if="windowWidth > 420"
+            am
+            :selected="currMeridiem === 'AM'"
+            @click="currMeridiem = $event"
+          />
           <MeridiemBtn
             :selected="currMeridiem === 'PM'"
             @click="currMeridiem = $event"
@@ -63,16 +72,22 @@ export default {
     },
     militaryTime: Boolean,
     pickerContainerClass: String,
-    inputClass: String
+    inputClass: String,
+    inputContClass: String
   },
   mounted() {
     this.init()
+    this.addResizeListener()
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.onResizeEvent)
   },
   data() {
     return {
       show: false,
       currMeridiem: null,
-      selectedVal: null
+      selectedVal: null,
+      windowWidth: 0
     }
   },
   computed: {
@@ -89,9 +104,28 @@ export default {
     },
     amPm() {
       return this.militaryTime ? '' : this.currMeridiem
+    },
+    containerStyles() {
+      return {
+        position: this.inline ? 'static' : 'absolute'
+      }
+    }
+  },
+  watch: {
+    value(val) {
+      this.setValue(val)
     }
   },
   methods: {
+    addResizeListener() {
+      if (window) {
+        window.addEventListener('resize', this.onResizeEvent)
+        window.dispatchEvent(new window.Event('resize'))
+      }
+    },
+    onResizeEvent(e) {
+      this.windowWidth = e.target.innerWidth
+    },
     init() {
       if (this.value) {
         this.setValue(this.value)
@@ -107,6 +141,7 @@ export default {
         let d = new Date(date)
         date = isValid(d) ? d : null
       }
+      console.log(date)
       if (!date) {
         this.selectedVal = new Date()
         this.setMeridiem(new Date())
@@ -149,7 +184,6 @@ export default {
   }
   .input-container {
     position: relative;
-    max-width: 200px;
   }
   .meridiem {
     position: absolute;
@@ -171,8 +205,20 @@ export default {
       width: 64px;
       height: 40px;
       @media screen and (min-width: 420px) {
-        width: 24px;
-        height: 24px;
+        width: 32px;
+        height: 32px;
+      }
+    }
+    .mer__only-desktop {
+      display: flex;
+      @media screen and (max-width: 420px) {
+        display: none;
+      }
+    }
+    &.mer__only-mob {
+      display: none;
+      @media screen and (max-width: 420px) {
+        display: flex;
       }
     }
   }

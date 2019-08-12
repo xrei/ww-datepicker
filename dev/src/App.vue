@@ -20,6 +20,7 @@
         :militaryTime="lang === 'ru'"
         pickerContainerClass="tp-container"
         inputClass="tp-input"
+        inputContClass="tp-cont"
       />
       {{ time.toString() }}
     </div>
@@ -40,7 +41,7 @@ export default {
     date: new Date(),
     time: new Date(new Date('10 May 2019').setHours(23)),
     langs: lang,
-    lang: 'ru',
+    lang: 'en',
     disabledDates: {
       // to: new Date(),
       // from: new Date('2023-09-20'),
@@ -85,23 +86,25 @@ body {
   max-width: 420px;
 }
 
-
+.tp-cont {
+  max-width: 200px;
+}
 .tp-input {
   border: 1px solid #eee;
   font-size: 24px;
   padding: 24px;
+  position: relative;
 }
 .tp-container {
+  box-sizing: border-box;
   background-color: #fff;
   width: 100%;
-  position: absolute;
   max-width: 420px;
-  border: 2px solid #0070ff;
   font-size: 30px;
+  height: 180px;
   @media screen and (min-width: 420px) {
     font-size: 24px;
     max-width: 200px;
-    height: 180px;
   }
 }
 </style>
