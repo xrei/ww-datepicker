@@ -80,9 +80,6 @@ body {
   max-height: 80px;
 }
 
-.datepicker-cont {
-  // margin-bottom: 3rem;
-}
 .timepicker-cont {
   max-width: 420px;
 }
