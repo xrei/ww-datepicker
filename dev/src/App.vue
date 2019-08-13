@@ -5,11 +5,11 @@
         v-model="time"
         class="picker"
         placeholder="Select Date"
+        :format="'dd MMM, D'"
         :mondayFirst="lang==='ru'"
         :language="langs[lang]"
         :disabled-dates="disabledDates"
         inputClass="datepicker-input"
-        inline
       />
 
       <br>

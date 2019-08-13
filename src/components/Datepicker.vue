@@ -274,7 +274,7 @@ export default {
       return this.mobSelected.unix
     },
     isMobile() {
-      return window && window.innerWidth <= 375
+      return window && window.innerWidth <= 425
     },
     isMobileInline() {
       return this.isInline ? true : this.mobileIsShow
@@ -433,6 +433,7 @@ export default {
       this.$emit('cleared')
     },
     isDayDisabledInMonth(date) {
+      if (!this.disabledDates) return false
       // Currently works only with disalbed to some date
       // $todo: make it work with disabled from
       const disabledToDay = new Date(this.disabledDates.to).getDate()
