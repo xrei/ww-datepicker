@@ -436,6 +436,7 @@ export default {
       this.$emit('cleared')
     },
     isDateInRange(date) {
+      // only implemented disabled to and from dates
       if (!this.disabledDates) return false
 
       const dTo = new Date(this.disabledDates.to)
