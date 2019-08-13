@@ -65,7 +65,7 @@ export default {
   },
   computed: {
     fYears() {
-      return this.makeYrs().map(v => ({value: v, id: v.year, name: v.year}))
+      return this.makeYrs(this.mDate).map(v => ({value: v, id: v.year, name: v.year, disabled: v.isDisabled}))
     },
     years () {
       const d = this.pageDate
@@ -121,7 +121,8 @@ export default {
     }
   },
   methods: {
-    makeYrs () {
+    makeYrs (dt) {
+      // let chDate = new Date(dt)
       const d = new Date()
       let years = []
       // set up a new date object to the beginning of the current 'page'7
@@ -141,7 +142,7 @@ export default {
       return years
     },
     selectYear (year) {
-      if (year.isDisabled) {
+      if (year.isDisabled && !this.isMobile) {
         return false
       }
       this.$emit('selectYear', year)

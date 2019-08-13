@@ -111,7 +111,7 @@
     />
     <picker-month
       class="mobile-view__item"
-      :mDate="value"
+      :mDate="mobSelected.unix"
       :isMobile="isMobile"
       :pageDate="pageDate"
       :selectedDate="selectedDate"
@@ -157,6 +157,7 @@ import PickerDay from './PickerDay.vue'
 import PickerMonth from './PickerMonth.vue'
 import PickerYear from './PickerYear.vue'
 import utils, { makeDateUtils } from '../utils/DateUtils'
+import {isAfter, isBefore} from 'date-fns'
 
 const getTime = date => +new Date(date)
 
@@ -415,12 +416,12 @@ export default {
       const date = new Date(timestamp)
       this.selectedDate = date
       this.setPageDate(date)
-      const someOfDisabled = this.mobSelected.year.isDisabled || this.mobSelected.month.isDisabled || this.isDayDisabledInMonth(date)
-      if (someOfDisabled) {
-        return
+
+      if (this.isDateInRange(date)) {
+        this.$emit('selected', date)
+        this.$emit('input', date)
       }
-      this.$emit('selected', date)
-      this.$emit('input', date)
+      return
     },
     /**
      * Clear the selected date
@@ -432,20 +433,17 @@ export default {
       this.$emit('input', null)
       this.$emit('cleared')
     },
-    isDayDisabledInMonth(date) {
+    isDateInRange(date) {
       if (!this.disabledDates) return false
-      // Currently works only with disalbed to some date
-      // $todo: make it work with disabled from
-      const disabledToDay = new Date(this.disabledDates.to).getDate()
-      const disabledToMonth = new Date(this.disabledDates.to).getMonth()
-      const month = new Date(date).getMonth()
-      const day = new Date(date).getDate()
 
-      if (month === disabledToMonth) {
-        if (day >= disabledToDay) return false
-        else return true
+      const dTo = new Date(this.disabledDates.to)
+      const dFrom = new Date(this.disabledDates.from)
+      const d = new Date(date)
+
+      if (isBefore(d, dTo) || isAfter(d, dFrom)) {
+        return false
       }
-      return false
+      return true
     },
     mobileSelDay(date) {
       this.mobSelected.day = date

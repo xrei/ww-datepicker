@@ -10,6 +10,7 @@
         :language="langs[lang]"
         :disabled-dates="disabledDates"
         inputClass="datepicker-input"
+        inline
       />
 
       <br>
@@ -44,8 +45,8 @@ export default {
     langs: lang,
     lang: 'en',
     disabledDates: {
-      to: new Date(new Date().setDate(new Date().getDate() - 1)),
-      from: new Date('2023-09-20'),
+      // to: new Date(new Date().setDate(new Date().getDate() - 1)),
+      // from: new Date('2020-09-20'),
     }
   }),
   methods: {
