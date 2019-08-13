@@ -157,9 +157,11 @@ import PickerDay from './PickerDay.vue'
 import PickerMonth from './PickerMonth.vue'
 import PickerYear from './PickerYear.vue'
 import utils, { makeDateUtils } from '../utils/DateUtils'
-import {isAfter, isBefore} from 'date-fns'
 
 const getTime = date => +new Date(date)
+
+const isBefore = (d1, d2) => new Date(d1).getTime() < new Date(d2).getTime()
+const isAfter = (d1, d2) => new Date(d1).getTime() > new Date(d2).getTime()
 
 export default {
   components: {
