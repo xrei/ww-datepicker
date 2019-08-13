@@ -32,7 +32,7 @@
 <script>
 import Datepicker from '../../src/components/Datepicker.vue'
 import TimePicker from '../../src/components/TimePicker'
-import * as lang from '../../src/locale/index.js'
+import {en, ru, es} from '../../src/locale/index.js'
 
 export default {
   name: 'app',
@@ -42,8 +42,8 @@ export default {
   data: () => ({
     date: new Date(),
     time: new Date(new Date('20 Aug 2019').setHours(23)),
-    langs: lang,
-    lang: 'en',
+    langs: {en, ru, es},
+    lang: 'es',
     disabledDates: {
       to: new Date(new Date().setDate(new Date().getDate() - 1)),
       from: new Date('2020-09-20'),
