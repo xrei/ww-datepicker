@@ -2,7 +2,7 @@
   <div id="app">
     <div class="datepicker-cont">
       <datepicker
-        v-model="time"
+        :value="date"
         class="picker"
         placeholder="Select Date"
         :format="'dd MMM, D'"
@@ -11,6 +11,7 @@
         :disabled-dates="disabledDates"
         inputClass="datepicker-input"
         inline
+        @input="handleDate"
       />
 
       <br>
@@ -43,7 +44,7 @@ export default {
     date: new Date(),
     time: new Date(new Date('20 Aug 2019').setHours(23)),
     langs: {en, ru, es},
-    lang: 'es',
+    lang: 'ru',
     disabledDates: {
       to: new Date(new Date().setDate(new Date().getDate() - 1)),
       from: new Date('2020-09-20'),
