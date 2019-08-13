@@ -216,7 +216,8 @@ export default {
     maximumView: {
       type: String,
       default: 'year'
-    }
+    },
+    isReadonly: Boolean
   },
   data () {
     const startDate = this.openDate ? new Date(this.openDate) : new Date()
@@ -329,6 +330,10 @@ export default {
      * @return {mixed}
      */
     showCalendar () {
+      if (this.isReadonly) {
+        this.$emit('readonly')
+        return
+      }
       if (this.isMobile) {
         this.mobileIsShow = true
         return

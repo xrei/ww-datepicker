@@ -73,7 +73,8 @@ export default {
     militaryTime: Boolean,
     pickerContainerClass: String,
     inputClass: String,
-    inputContClass: String
+    inputContClass: String,
+    isReadonly: Boolean
   },
   mounted() {
     this.init()
@@ -155,6 +156,10 @@ export default {
       this.emitSelected(p.date)
     },
     showTime() {
+      if (this.isReadonly) {
+        this.$emit('readonly')
+        return
+      }
       this.show = !this.show
       this.emitShow()
     },
