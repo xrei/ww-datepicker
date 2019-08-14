@@ -590,7 +590,7 @@ export default {
       if (this.value) {
         this.setValue(this.value)
         this.initSelected(this.value)
-      } else {
+      } else if (this.isMobile && !this.value) {
         this.initSelected(new Date(), false)
       }
       if (this.isInline) {

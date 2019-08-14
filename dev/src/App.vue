@@ -40,7 +40,7 @@ export default {
     Datepicker, TimePicker
   },
   data: () => ({
-    date: new Date(),
+    date: null,
     time: undefined,
     langs: {en, ru, es},
     lang: 'ru',
