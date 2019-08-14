@@ -253,8 +253,9 @@ export default {
         day: {},
         month: {},
         year: {},
-        date: this.selectedDate,
-        unix: 0
+        date: null,
+        unix: 0,
+        hasValue: false
       }
     }
   },
@@ -269,7 +270,6 @@ export default {
       this.setInitialView()
     },
     mobDateWatch() {
-      // console.log('trgg', this.mobSelected.date)
       this.setDate(this.mobSelected.date)
     }
   },
@@ -420,11 +420,13 @@ export default {
      * @param {Number} timestamp
      */
     setDate (timestamp) {
+      if (this.isMobile && !this.mobSelected.hasValue) return
       const date = new Date(timestamp)
-      this.selectedDate = date
+
       this.setPageDate(date)
 
       if (this.isDateInRange(date)) {
+        this.selectedDate = date
         this.$emit('selected', date)
         this.$emit('input', date)
       }
@@ -453,7 +455,11 @@ export default {
       }
       return true
     },
+    letValueBe() {
+      this.mobSelected.hasValue = true
+    },
     mobileSelDay(date) {
+      this.letValueBe()
       this.mobSelected.day = date
       let max = this.mobSelected.month.maxDays
       const day = date.date >= max ? max : date.date
@@ -583,21 +589,24 @@ export default {
     init () {
       if (this.value) {
         this.setValue(this.value)
-        this.initSelected()
+        this.initSelected(this.value)
+      } else {
+        this.initSelected(new Date(), false)
       }
       if (this.isInline) {
         this.setInitialView()
       }
     },
-    initSelected() {
-      this.mobSelected.year.timestamp = getTime(this.value)
-      this.mobSelected.year.year = new Date(this.value).getFullYear()
-      this.mobSelected.month.timestamp = getTime(this.value)
-      this.mobSelected.month.month = new Date(this.value).getMonth()
-      this.mobSelected.day.timestamp = getTime(this.value)
-      this.mobSelected.day.date = new Date(this.value).getDate()
-      this.mobSelected.date = new Date(this.value)
-      this.mobSelected.unix = +new Date(this.value)
+    initSelected(value, hasValue = true) {
+      this.mobSelected.year.timestamp = getTime(value)
+      this.mobSelected.year.year = new Date(value).getFullYear()
+      this.mobSelected.month.timestamp = getTime(value)
+      this.mobSelected.month.month = new Date(value).getMonth()
+      this.mobSelected.day.timestamp = getTime(value)
+      this.mobSelected.day.date = new Date(value).getDate()
+      this.mobSelected.date = new Date(value)
+      this.mobSelected.unix = +new Date(value)
+      this.mobSelected.hasValue = hasValue
     }
   },
   mounted () {

@@ -9,6 +9,7 @@
         :type="inline ? 'hidden' : 'text'"
         :class="{[inputClass]: inputClass, 'tp__input': true}"
         :value="fmtVal"
+        :placeholder="placeholder"
         @click="showTime"
         @blur="onBlur"
       >
@@ -74,7 +75,11 @@ export default {
     pickerContainerClass: String,
     inputClass: String,
     inputContClass: String,
-    isReadonly: Boolean
+    isReadonly: Boolean,
+    placeholder: {
+      type: String,
+      default: 'Pick time'
+    }
   },
   mounted() {
     this.init()
