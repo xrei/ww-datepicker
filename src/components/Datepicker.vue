@@ -444,7 +444,7 @@ export default {
     },
     isDateInRange(date) {
       // only implemented disabled to and from dates
-      if (!this.disabledDates) return true
+      if (!this.disabledDates || !this.disabledDates.to || !this.disabledDates.from) return true
 
       const dTo = new Date(this.disabledDates.to)
       const dFrom = new Date(this.disabledDates.from)

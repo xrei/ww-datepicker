@@ -2,7 +2,7 @@
   <div id="app">
     <div class="datepicker-cont">
       <datepicker
-        :value="time"
+        :value="date"
         class="picker"
         placeholder="Select Date"
         :format="'dd MMM, D'"
@@ -24,7 +24,7 @@
         inputClass="tp-input"
         inputContClass="tp-cont"
       />
-      <!-- {{ time.toString() }} -->
+      {{ time.toString() }}
     </div>
   </div>
 </template>
@@ -41,12 +41,13 @@ export default {
   },
   data: () => ({
     date: null,
-    time: undefined,
+    time: '',
     langs: {en, ru, es},
-    lang: 'ru',
+    lang: 'en',
     disabledDates: {
-      to: new Date(new Date().setDate(new Date().getDate() - 1)),
-      from: new Date('2020-09-20'),
+      to: null,
+      // to: new Date(new Date().setDate(new Date().getDate() - 1)),
+      from: null,
     }
   }),
   methods: {

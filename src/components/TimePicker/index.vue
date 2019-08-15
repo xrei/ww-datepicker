@@ -16,7 +16,7 @@
       <span v-if="!militaryTime" class="meridiem">{{amPm}}</span>
     </div>
     <PickerTime
-      v-if="showOrInline && unix"
+      v-if="showOrInline"
       :class="pickerContainerClass"
       :isMilitary="militaryTime"
       :meridiem="currMeridiem"
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { format, isValid, getHours, getTime } from 'date-fns'
+import { format, isValid, isDate, getHours, getTime, setMinutes, setHours } from 'date-fns'
 import PickerTime from './PickerTime.vue'
 import MeridiemBtn from './MeridiemBtn.vue'
 
@@ -65,7 +65,7 @@ export default {
   components: {PickerTime, MeridiemBtn},
   props: {
     // ONLY DATE OBJECT OR UNIX TIME!!!
-    value: [Date, Number], // NO STRINGS!!!
+    value: [Date, Number, String],
     inline: Boolean,
     lang: {
       type: String,
@@ -98,7 +98,7 @@ export default {
   },
   computed: {
     unix() {
-      return getTime(this.selectedVal)
+      return getTime(this.selectedVal) || getTime(setMinutes(setHours(new Date(), 0), 0))
     },
     showOrInline() {
       return this.inline ? true : this.show
@@ -133,17 +133,17 @@ export default {
       this.windowWidth = e.target.innerWidth
     },
     init() {
-      if (this.value) {
+      if (this.value && isDate(this.value)) {
         this.setValue(this.value)
       }
     },
     setMeridiem(date) {
       if (this.militaryTime) return
       let h = getHours(date)
-      this.currMeridiem = h > 12 ? PM : AM
+      this.currMeridiem = h >= 12 ? PM : AM
     },
     setValue(date) {
-      if (typeof date === 'number') {
+      if (typeof date === 'number' || typeof date === 'string') {
         let d = new Date(date)
         date = isValid(d) ? d : null
       }
@@ -151,7 +151,7 @@ export default {
       if (!date) {
         this.selectedVal = new Date()
         this.setMeridiem(new Date())
-        return
+        return false
       }
       this.selectedVal = date
       this.setMeridiem(date)
