@@ -1,13 +1,13 @@
 <template>
   <div class="vtp__timepicker">
     <div v-if="!inline"
-      :class="{[inputContClass]: inputContClass, 'input-container': true}"
+      :class="[inputContainerClass, 'input-container']"
     >
       <input
         ref="input"
         :readonly="true"
         :type="inline ? 'hidden' : 'text'"
-        :class="{[inputClass]: inputClass, 'tp__input': true}"
+        :class="[inputClass, 'tp__input']"
         :value="fmtVal"
         :placeholder="placeholder"
         @click="showTime"
@@ -24,7 +24,7 @@
       :style="containerStyles"
       @time:changed="handleTimeChange"
     >
-      <template v-if="currMeridiem && windowWidth <= 420" #left>
+      <template v-if="!militaryTime && currMeridiem && windowWidth <= 420" #left>
         <div class="btn-container">
           <MeridiemBtn
             am
@@ -33,7 +33,7 @@
           />
         </div>
       </template>
-      <template v-if="currMeridiem" #right>
+      <template v-if="!militaryTime && currMeridiem" #right>
         <div class="btn-container">
           <MeridiemBtn
             v-if="windowWidth > 420"
@@ -60,6 +60,7 @@ const AM = 'AM'
 const PM = 'PM'
 
 const with24hours = (use24) => use24 ? 'HH' : 'hh'
+const constructDefDate = () => setMinutes(setHours(new Date(), 0), 0)
 
 export default {
   components: {PickerTime, MeridiemBtn},
@@ -67,14 +68,10 @@ export default {
     // ONLY DATE OBJECT OR UNIX TIME!!!
     value: [Date, Number, String],
     inline: Boolean,
-    lang: {
-      type: String,
-      default: 'en'
-    },
     militaryTime: Boolean,
-    pickerContainerClass: String,
-    inputClass: String,
-    inputContClass: String,
+    pickerContainerClass: [String, Array, Object],
+    inputClass: [String, Array, Object],
+    inputContainerClass: [String, Array, Object],
     isReadonly: Boolean,
     placeholder: {
       type: String,
@@ -98,7 +95,7 @@ export default {
   },
   computed: {
     unix() {
-      return getTime(this.selectedVal) || getTime(setMinutes(setHours(new Date(), 0), 0))
+      return getTime(this.selectedVal) || getTime(constructDefDate())
     },
     showOrInline() {
       return this.inline ? true : this.show
@@ -138,7 +135,6 @@ export default {
       }
     },
     setMeridiem(date) {
-      if (this.militaryTime) return
       let h = getHours(date)
       this.currMeridiem = h >= 12 ? PM : AM
     },
@@ -149,8 +145,8 @@ export default {
       }
 
       if (!date) {
-        this.selectedVal = new Date()
-        this.setMeridiem(new Date())
+        this.selectedVal = constructDefDate()
+        this.setMeridiem(constructDefDate())
         return false
       }
       this.selectedVal = date
@@ -158,7 +154,7 @@ export default {
     },
     handleTimeChange(p) {
       this.selectedVal = p.date
-      this.emitSelected(p.date)
+      this.emitSelected(p.date, p.formatted)
     },
     showTime() {
       if (this.isReadonly) {
@@ -178,8 +174,8 @@ export default {
     emitClose() {
       this.$emit('time:close')
     },
-    emitSelected(time) {
-      this.$emit('time:selected', time)
+    emitSelected(time, fmt) {
+      this.$emit('time:selected', { time, formatted: fmt })
       this.$emit('input', time)
     }
   }

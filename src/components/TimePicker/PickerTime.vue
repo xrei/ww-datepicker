@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { lightFormat, getYear, getMonth, getDate, getHours, getMinutes } from 'date-fns'
+import { lightFormat, getYear, getMonth, getDate, getHours, getMinutes, isValid } from 'date-fns'
 import VPicker from '../VPicker'
 
 const addZero = v => v < 10 ? '0' + v : String(v)
@@ -74,7 +74,7 @@ export default {
       }
     },
     formattedVal() {
-      if (!this.selectedTime) return ''
+      if (!this.selectedTime || !isValid(this.selectedTime)) return ''
       return lightFormat(this.selectedTime, 'hh:mm') || ''
     },
     hoursLen() {
@@ -103,7 +103,7 @@ export default {
       const h = this.selHour
       const m = this.selMin
       const mer = this.meridiem
-      if (mer) {
+      if (mer && !this.isMilitary) {
         return new Date(`${month + 1}/${date}/${year} ${h}:${m} ${mer}`)
       }
       return new Date(`${month + 1}/${date}/${year} ${h}:${m}`)

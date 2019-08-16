@@ -1,5 +1,9 @@
 <template>
   <div id="app">
+    <div class="lang">
+      <span @click="lang = 'en'">en</span>
+      <span @click="lang = 'ru'">ru</span>
+    </div>
     <div class="datepicker-cont">
       <datepicker
         :value="date"
@@ -20,9 +24,9 @@
       <TimePicker
         v-model="time"
         :militaryTime="lang === 'ru'"
-        pickerContainerClass="tp-container"
-        inputClass="tp-input"
-        inputContClass="tp-cont"
+        :pickerContainerClass="['tp-container']"
+        :inputClass="['tp-input']"
+        :inputContainerClass="{'tp-cont': true}"
       />
       {{ time.toString() }}
     </div>
@@ -71,6 +75,18 @@ body {
   color: #2c3e50;
   margin: 1rem;
   margin-top: 60px;
+
+  .lang {
+    margin: 1rem;
+    span {
+      padding: 1rem;
+      background-color: #fff;
+      color: #000;
+      &:hover {
+        background-color: aqua;
+      }
+    }
+  }
 }
 
 .datepicker-input {
