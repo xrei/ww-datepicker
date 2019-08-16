@@ -6,7 +6,7 @@
     </div>
     <div class="datepicker-cont">
       <datepicker
-        :value="date"
+        :value="time"
         class="picker"
         placeholder="Select Date"
         :format="'dd MMM, D'"
@@ -45,7 +45,7 @@ export default {
   },
   data: () => ({
     date: null,
-    time: '',
+    time: new Date(),
     langs: {en, ru, es},
     lang: 'en',
     disabledDates: {

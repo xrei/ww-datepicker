@@ -107,14 +107,11 @@ export default {
     }
   },
   watch: {
-    value(newValue, oldValue) {
-      let foundIndex = -1
-      this.sanitizedOptions.forEach((option, index) => {
-        if (option.value === newValue) foundIndex = index
-      })
-      if (this.lastIndex !== foundIndex) {
-        this.correction(foundIndex)
-      }
+    initial(val) {
+      this.calculateIndex(val)
+    },
+    value(val) {
+      this.calculateIndex(val)
     },
     optLen(v) {
       this.$nextTick(() => {
@@ -130,6 +127,15 @@ export default {
     }
   },
   methods: {
+    calculateIndex(v) {
+      let foundIndex = -1
+      this.sanitizedOptions.forEach((option, index) => {
+        if (option.value === v || option.id === v) foundIndex = index
+      })
+      if (this.lastIndex !== foundIndex) {
+        this.correction(foundIndex)
+      }
+    },
     calculatePivots() {
       if (!this.$refs.items || !this.$refs.selection) {
         this.pivots = []
@@ -254,6 +260,7 @@ export default {
       this.correction(index)
     },
     correction(index) {
+      if (!this.pivots) return
       index = Math.min(Math.max(index, this.placeholder ? -1 : 0), this.pivots.length - 1)
 
       if (this.lastIndex !== index && index < this.sanitizedOptions.length) {

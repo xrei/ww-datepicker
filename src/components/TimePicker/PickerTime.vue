@@ -52,16 +52,11 @@ export default {
   data: () => ({
     selHour: null,
     selMin: null,
-    selectedTime: new Date(),
+    selectedTime: undefined,
     shouldRender: false
   }),
   mounted () {
-    this.selHour = getHrs(this.selectedVal, this.isMilitary)
-    this.selMin = getMinutes(this.selectedVal)
-    this.selectedTime = new Date(this.selectedVal)
-    this.$nextTick(() => {
-      this.shouldRender = true
-    })
+    this.initTime(this.selectedVal)
   },
   computed: {
     currentDate() {
@@ -95,9 +90,22 @@ export default {
     meridiem() {
       this.selectedTime = this.makeDate()
       this.changed()
+    },
+    selectedVal(v) {
+      this.selHour = getHrs(v, this.isMilitary)
+      this.selMin = getMinutes(v)
+      this.selectedTime = this.makeDate()
     }
   },
   methods: {
+    initTime(v) {
+      this.selHour = getHrs(v, this.isMilitary)
+      this.selMin = getMinutes(v)
+      this.selectedTime = new Date(v)
+      this.$nextTick(() => {
+        this.shouldRender = true
+      })
+    },
     makeDate() {
       const { year, month, date } = this.currentDate
       const h = this.selHour

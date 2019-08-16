@@ -40,7 +40,7 @@ export default {
   justify-content: center;
   font-size: 12px;
   cursor: pointer;
-  &.selected, &:hover {
+  &.selected {
     background-color: #0070ff;
     color: #fff;
   }
