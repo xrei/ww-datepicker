@@ -1,6 +1,6 @@
 <template>
   <div class="vdp__arrow-container" @click="$emit('click')">
-    <div class="arrow" :class="{'right': right, 'left': left }" />
+    <div class="arrow" :class="{'right': right, 'left': left}" />
   </div>
 </template>
 
@@ -12,7 +12,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="scss" scoped>
 .vdp__arrow-container {
@@ -63,7 +62,7 @@ export default {
     &.right::before {
       transform: rotate(225deg);
     }
-    &.right::after { 
+    &.right::after {
       width: 20px;
       height: 2px;
       transform: translate(-9px, -1px);
@@ -71,7 +70,7 @@ export default {
     &.left::before {
       transform: rotate(45deg);
     }
-    &.left::after { 
+    &.left::after {
       width: 20px;
       height: 2px;
       transform: translate(-10px, -1px);

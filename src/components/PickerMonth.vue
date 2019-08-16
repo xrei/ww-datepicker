@@ -22,12 +22,12 @@
       :class="{'selected': month.isSelected, 'disabled': month.isDisabled}"
       @click.stop="selectMonth(month)">{{ month.month }}</span>
   </div>
-  <div v-else class="vdp-month__mobile">	
-    <VPicker	
+  <div v-else class="vdp-month__mobile">
+    <VPicker
       :initial="initialMonth"
-      :options="fMonths"	
-      @input="selectMonth($event)"	
-    />	
+      :options="fMonths"
+      @input="selectMonth($event)"
+    />
   </div>
 </template>
 <script>

@@ -119,7 +119,7 @@ export default {
         const maxIdx = v - 1
         if (this.lastIndex >= maxIdx) {
           this.correction(maxIdx)
-          return
+          return false
         } else {
           this.correction(this.lastIndex)
         }

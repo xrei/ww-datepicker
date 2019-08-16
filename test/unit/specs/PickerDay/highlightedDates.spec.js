@@ -15,7 +15,7 @@ describe('PickerDay highlight date', () => {
           from: new Date(2016, 12, 4)
         },
         disabledDates: {
-          dates: [ new Date(2016, 12, 5) ]
+          dates: [new Date(2016, 12, 5)]
         }
       }
     })

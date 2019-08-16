@@ -3,7 +3,7 @@
     <div v-if="$slots.left" class="left">
       <slot name="left"></slot>
     </div>
-    <div class="mid" 
+    <div class="mid"
         v-if="shouldRender">
       <VPicker
         :initial="selHour"

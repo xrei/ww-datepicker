@@ -430,7 +430,7 @@ export default {
         this.$emit('selected', date)
         this.$emit('input', date)
       }
-      return
+      return false
     },
     /**
      * Clear the selected date

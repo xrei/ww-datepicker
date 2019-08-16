@@ -23,12 +23,12 @@
       :class="{ 'selected': year.isSelected, 'disabled': year.isDisabled }"
       @click.stop="selectYear(year)">{{ year.year }}</span>
   </div>
-  <div v-else class="vdp-year__mobile">	
+  <div v-else class="vdp-year__mobile">
     <VPicker
       :initial="initialYear"
-      :options="fYears"	
-      @input="selectYear($event)"	
-    />	
+      :options="fYears"
+      @input="selectYear($event)"
+    />
   </div>
 </template>
 <script>
