@@ -31,7 +31,7 @@
         inline
         @input="handleDate"
       />
-      {{ time.toString() }}
+      {{ time && time.toString() }}
     </div>
   </div>
 </template>

@@ -16,7 +16,7 @@
       <span v-if="!militaryTime" class="meridiem">{{amPm}}</span>
     </div>
     <PickerTime
-      v-if="showOrInline"
+      v-if="showOrInline && unix"
       :class="pickerContainerClass"
       :isMilitary="militaryTime"
       :meridiem="currMeridiem"
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { format, isValid, isDate, getHours, getTime, setMinutes, setHours } from 'date-fns'
+import { format, isValid, isDate, getHours, getTime, setMinutes } from 'date-fns'
 import PickerTime from './PickerTime.vue'
 import MeridiemBtn from './MeridiemBtn.vue'
 
@@ -60,7 +60,7 @@ const AM = 'AM'
 const PM = 'PM'
 
 const with24hours = (use24) => use24 ? 'HH' : 'hh'
-const constructDefDate = () => setMinutes(setHours(new Date(), 0), 0)
+const constructDefDate = () => setMinutes(new Date(), 0)
 
 export default {
   components: {PickerTime, MeridiemBtn},
@@ -95,7 +95,10 @@ export default {
   },
   computed: {
     unix() {
-      return getTime(this.selectedVal) || getTime(constructDefDate())
+      // return getTime(this.selectedVal) || getTime(constructDefDate())
+      if (this.value) return getTime(this.value)
+      else if (this.selectedVal) return getTime(this.selectedVal)
+      else return getTime(constructDefDate())
     },
     showOrInline() {
       return this.inline ? true : this.show
