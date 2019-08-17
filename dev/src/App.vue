@@ -3,59 +3,32 @@
     <div class="lang">
       <span @click="lang = 'en'">en</span>
       <span @click="lang = 'ru'">ru</span>
+      <span @click="show = !show">{{show}}</span>
     </div>
-    <div class="datepicker-cont">
-      <datepicker
-        :value="time"
-        class="picker"
-        placeholder="Select Date"
-        :format="'dd MMM, D'"
-        :mondayFirst="lang==='ru'"
-        :language="langs[lang]"
-        :disabled-dates="disabledDates"
-        inputClass="datepicker-input"
-        inline
-        @input="handleDate"
-      />
-
-      <br>
-      <!-- {{ date.toString() }} -->
-    </div>
-    <div class="timepicker-cont">
-      <TimePicker
-        :value="time"
-        :militaryTime="lang === 'ru'"
-        :pickerContainerClass="['tp-container']"
-        :inputClass="['tp-input']"
-        :inputContainerClass="{'tp-cont': true}"
-        inline
-        @input="handleDate"
-      />
-      {{ time && time.toString() }}
-    </div>
+    <Test v-if="show" :value="time" @input="time = $event"/>
   </div>
 </template>
 
 <script>
-import Datepicker from '../../src/components/Datepicker.vue'
-import TimePicker from '../../src/components/TimePicker'
-import {en, ru, es} from '../../src/locale/index.js'
+import Test from './Test'
+// import Datepicker from '../../src/components/Datepicker.vue'
+// import TimePicker from '../../src/components/TimePicker'
+// import {en, ru, es} from '../../src/locale/index.js'
 
 export default {
   name: 'app',
-  components: {
-    Datepicker, TimePicker
-  },
+  components: { Test },
   data: () => ({
     date: null,
-    time: new Date(),
-    langs: {en, ru, es},
+    time: undefined,
+    // langs: {en, ru, es},
     lang: 'en',
     disabledDates: {
       to: null,
       // to: new Date(new Date().setDate(new Date().getDate() - 1)),
       from: null,
-    }
+    },
+    show: false
   }),
   methods: {
     handleDate(e) {
