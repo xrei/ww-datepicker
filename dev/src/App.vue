@@ -14,6 +14,7 @@
         :language="langs[lang]"
         :disabled-dates="disabledDates"
         inputClass="datepicker-input"
+        inline
         @input="handleDate"
       />
 
@@ -22,11 +23,13 @@
     </div>
     <div class="timepicker-cont">
       <TimePicker
-        v-model="time"
+        :value="time"
         :militaryTime="lang === 'ru'"
         :pickerContainerClass="['tp-container']"
         :inputClass="['tp-input']"
         :inputContainerClass="{'tp-cont': true}"
+        inline
+        @input="handleDate"
       />
       {{ time.toString() }}
     </div>
@@ -56,7 +59,7 @@ export default {
   }),
   methods: {
     handleDate(e) {
-      this.date = e
+      // this.date = e
       this.time = e
     }
   }

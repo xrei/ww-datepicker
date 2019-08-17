@@ -70,7 +70,6 @@ export default {
     this.$el.addEventListener('mouseleave', this.onCancel)
 
     this.calculatePivots()
-    this.scrollMax = this.pivots[this.pivots.length - 1] * (-1)
     if (this.lastIndex > 0) {
       this.top = this.pivots[this.lastIndex] * (-1)
     }
@@ -148,6 +147,7 @@ export default {
         const itemRect = item.getBoundingClientRect()
         return Math.round(((itemRect.top + itemRect.bottom) / 2 - med) * 10) / 10 - this.top
       })
+      this.scrollMax = this.pivots[this.pivots.length - 1] * (-1)
     },
     onScroll(e) {
       if (this.top >= 0 && e.deltaY < 0) return

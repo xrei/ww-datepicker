@@ -542,6 +542,7 @@ export default {
       }
       this.selectedDate = date
       this.setPageDate(date)
+      this.initSelected(date)
     },
     /**
      * Sets the date that the calendar should open on
