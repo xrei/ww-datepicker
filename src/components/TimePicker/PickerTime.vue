@@ -88,6 +88,7 @@ export default {
   },
   watch: {
     meridiem() {
+      if (!this.shouldRender) return
       this.selectedTime = this.makeDate()
       this.changed()
     },
