@@ -92,15 +92,14 @@ export default {
       this.selectedTime = this.makeDate()
       this.changed()
     },
-    selectedVal(v) {
-      this.selHour = getHrs(v, this.isMilitary)
-      this.selMin = getMinutes(v)
-      this.selectedTime = this.makeDate()
-    }
+    // selectedVal(v) {
+    //   this.selHour = getHrs(v, this.isMilitary)
+    //   this.selMin = getMinutes(v)
+    //   this.selectedTime = this.makeDate()
+    // }
   },
   methods: {
     initTime(v) {
-      console.log(new Date(v))
       this.selHour = getHrs(v, this.isMilitary)
       this.selMin = getMinutes(v)
       this.selectedTime = new Date(v)

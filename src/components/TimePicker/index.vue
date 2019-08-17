@@ -81,6 +81,9 @@ export default {
   mounted() {
     this.init()
     this.addResizeListener()
+    if (this.inline) {
+      this.setMeridiem(this.unix)
+    }
   },
   destroyed() {
     window.removeEventListener('resize', this.onResizeEvent)

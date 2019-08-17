@@ -10,7 +10,6 @@
         :language="langs[lang]"
         :disabled-dates="disabledDates"
         inputClass="datepicker-input"
-        inline
         @input="handleDate"
       />
 
@@ -24,7 +23,6 @@
         :pickerContainerClass="['tp-container']"
         :inputClass="['tp-input']"
         :inputContainerClass="{'tp-cont': true}"
-        inline
         @input="handleDate"
       />
       {{ time && time.toString() }}
