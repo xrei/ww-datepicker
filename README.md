@@ -2,6 +2,10 @@
 
 Datepicker based on [vuejs-datepicker](https://github.com/charliekassel/vuejs-datepicker)
 
+```js
+import {Timepicker, Datepicker} from 'ww-datetimepicker'
+```
+
 Datepicker и Timepicker работают преимущественно только с JS Date Object. Так что в `:value` или `v-model` следует передавать JS Date object. Это универсальнее строк т.к. позволяет преобразовать в любой нужный формат дату и не будет проблем с парсингом.
 
 Пропсы Datepicker'а описаны в ссылке выше. Из новых только `isReadonly` который отключает пикер и рендерит только инпут с датой, при клике на который эмитится событие `@readonly`.
