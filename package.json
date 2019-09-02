@@ -18,7 +18,7 @@
   "author": "xrei",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xrei/ww-datepicker"
+    "url": "https://gitlab.whatwhere.world/dependencies/ww-vue-datepicker"
   },
   "private": true,
   "license": "MIT",
