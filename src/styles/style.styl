@@ -1,0 +1,143 @@
+$blue = #0070ff;
+
+.rtl
+    direction rtl
+.vdp-datepicker
+    position relative
+    text-align left
+    *
+        box-sizing border-box
+
+.vdp-datepicker__calendar
+    position absolute
+    z-index 100
+    background white
+    width 340px
+    border 2px solid $blue
+    padding 26px
+    header.vdp__header
+        height 40px
+        display flex
+        line-height 40px
+        text-align center
+        .middle__btn
+            flex 1
+        span
+            display block
+            font-size 24px
+            text-align center
+
+        .prev
+            &.disabled
+                color #ddd
+        .next
+            &.disabled
+                color#ddd
+
+        .prev:not(.disabled)
+        .next:not(.disabled)
+        .up:not(.disabled)
+            cursor pointer
+            &:hover
+                background #eee
+
+    .disabled
+        color #ddd
+        cursor default
+    .flex-rtl
+        display flex
+        width inherit
+        flex-wrap wrap
+
+    .cell
+        display inline-block
+        padding 0 5px
+        width (100/7)%
+        height 40px
+        line-height 40px
+        text-align center
+        vertical-align middle
+        border 1px solid transparent
+        &:not(.blank):not(.disabled).day
+        &:not(.blank):not(.disabled).month
+        &:not(.blank):not(.disabled).year
+            cursor pointer
+            &:hover
+                background-color $blue
+        &.selected
+            background $blue
+            &:hover
+                background $blue
+            &.highlighted
+                background $blue
+        &.highlighted
+            background #cae5ed
+            &.disabled
+                color: #a3a3a3
+        &.grey
+            color #888
+
+            &:hover
+                background inherit
+
+
+        &.day-header
+            font-size 75%
+            white-space nowrap
+            cursor inherit
+            color #c6c7c8
+            &:hover
+                background inherit
+        &.blank
+            border none
+        
+    .exist-days
+        .day:nth-child(7n),
+        .day:last-child
+            border-right: 1px solid #ececec
+        .day.fst-act-svn-days
+            border-top 1px solid #ececec
+        .day
+            border 1px solid #ececec
+            border-right: none
+            border-top: none
+
+    .month,
+    .year
+        width 33.333%
+
+.vdp-datepicker__clear-button
+.vdp-datepicker__calendar-button
+    cursor pointer
+    font-style normal
+    &.disabled
+        color #999
+        cursor default
+
+.vdp-datepicker .mobile-view
+    height 180px
+    display flex
+    background-color #fff
+    &__item
+        // flex 1 1 30%
+        height 100%
+        display flex
+        justify-content: center
+        font-size: 18px;
+        .vue-scroll-picker-item.-selected
+            font-size: 24px
+
+    .vdp-year__mobile
+        flex 1 1 20%
+    .vdp-month__mobile
+        flex 1 1 35%
+    .vdp-day__mobile
+        flex 1 1 25%
+        padding-right: 1rem
+    
+    .vdp-list
+        &__item
+            display flex
+            align-items: center
+            justify-content: center
+            color rgba(0,0,0, .4)
