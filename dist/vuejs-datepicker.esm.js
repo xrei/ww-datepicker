@@ -1,6 +1,8 @@
 import { getYear, getMonth, getDate, getHours, getMinutes, isValid, lightFormat, getTime as getTime$1, setMinutes, format, isDate } from 'date-fns';
 
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -106,13 +108,13 @@ function _objectSpread2(target) {
     var source = arguments[i] != null ? arguments[i] : {};
 
     if (i % 2) {
-      ownKeys(source, true).forEach(function (key) {
+      ownKeys(Object(source), true).forEach(function (key) {
         _defineProperty(target, key, source[key]);
       });
     } else if (Object.getOwnPropertyDescriptors) {
       Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
     } else {
-      ownKeys(source).forEach(function (key) {
+      ownKeys(Object(source)).forEach(function (key) {
         Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
       });
     }
@@ -141,9 +143,7 @@ function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance");
 }
 
-var Language =
-/*#__PURE__*/
-function () {
+var Language = /*#__PURE__*/function () {
   function Language(language, months, monthsAbbr, days) {
     _classCallCheck(this, Language);
 
@@ -584,90 +584,80 @@ var script = {
 } // eslint-disable-next-line
 ;
 
-function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
-/* server only */
-, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
-  if (typeof shadowMode !== 'boolean') {
-    createInjectorSSR = createInjector;
-    createInjector = shadowMode;
-    shadowMode = false;
-  } // Vue.extend constructor export interop.
-
-
-  var options = typeof script === 'function' ? script.options : script; // render functions
-
-  if (template && template.render) {
-    options.render = template.render;
-    options.staticRenderFns = template.staticRenderFns;
-    options._compiled = true; // functional template
-
-    if (isFunctionalTemplate) {
-      options.functional = true;
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+    if (typeof shadowMode !== 'boolean') {
+        createInjectorSSR = createInjector;
+        createInjector = shadowMode;
+        shadowMode = false;
     }
-  } // scopedId
-
-
-  if (scopeId) {
-    options._scopeId = scopeId;
-  }
-
-  var hook;
-
-  if (moduleIdentifier) {
-    // server build
-    hook = function hook(context) {
-      // 2.3 injection
-      context = context || // cached call
-      this.$vnode && this.$vnode.ssrContext || // stateful
-      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
-      // 2.2 with runInNewContext: true
-
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__;
-      } // inject component styles
-
-
-      if (style) {
-        style.call(this, createInjectorSSR(context));
-      } // register component module identifier for async chunk inference
-
-
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier);
-      }
-    }; // used by ssr in case component is cached and beforeCreate
-    // never gets called
-
-
-    options._ssrRegister = hook;
-  } else if (style) {
-    hook = shadowMode ? function () {
-      style.call(this, createInjectorShadow(this.$root.$options.shadowRoot));
-    } : function (context) {
-      style.call(this, createInjector(context));
-    };
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // register for functional component in vue file
-      var originalRender = options.render;
-
-      options.render = function renderWithStyleInjection(h, context) {
-        hook.call(context);
-        return originalRender(h, context);
-      };
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate;
-      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+    // Vue.extend constructor export interop.
+    const options = typeof script === 'function' ? script.options : script;
+    // render functions
+    if (template && template.render) {
+        options.render = template.render;
+        options.staticRenderFns = template.staticRenderFns;
+        options._compiled = true;
+        // functional template
+        if (isFunctionalTemplate) {
+            options.functional = true;
+        }
     }
-  }
-
-  return script;
+    // scopedId
+    if (scopeId) {
+        options._scopeId = scopeId;
+    }
+    let hook;
+    if (moduleIdentifier) {
+        // server build
+        hook = function (context) {
+            // 2.3 injection
+            context =
+                context || // cached call
+                    (this.$vnode && this.$vnode.ssrContext) || // stateful
+                    (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext); // functional
+            // 2.2 with runInNewContext: true
+            if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+                context = __VUE_SSR_CONTEXT__;
+            }
+            // inject component styles
+            if (style) {
+                style.call(this, createInjectorSSR(context));
+            }
+            // register component module identifier for async chunk inference
+            if (context && context._registeredComponents) {
+                context._registeredComponents.add(moduleIdentifier);
+            }
+        };
+        // used by ssr in case component is cached and beforeCreate
+        // never gets called
+        options._ssrRegister = hook;
+    }
+    else if (style) {
+        hook = shadowMode
+            ? function (context) {
+                style.call(this, createInjectorShadow(context, this.$root.$options.shadowRoot));
+            }
+            : function (context) {
+                style.call(this, createInjector(context));
+            };
+    }
+    if (hook) {
+        if (options.functional) {
+            // register for functional component in vue file
+            const originalRender = options.render;
+            options.render = function renderWithStyleInjection(h, context) {
+                hook.call(context);
+                return originalRender(h, context);
+            };
+        }
+        else {
+            // inject component registration as beforeCreate hook
+            const existing = options.beforeCreate;
+            options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+    }
+    return script;
 }
-
-var normalizeComponent_1 = normalizeComponent;
 
 /* script */
 const __vue_script__ = script;
@@ -780,15 +770,19 @@ __vue_render__._withStripped = true;
   
   /* style inject SSR */
   
+  /* style inject shadow dom */
+  
 
   
-  var DateInput = normalizeComponent_1(
+  const __vue_component__ = normalizeComponent(
     { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
     __vue_inject_styles__,
     __vue_script__,
     __vue_scope_id__,
     __vue_is_functional_template__,
     __vue_module_identifier__,
+    false,
+    undefined,
     undefined,
     undefined
   );
@@ -880,47 +874,55 @@ var VPicker = {
       scrollMax: null
     };
   },
-  mounted: function () {
-    var _mounted = _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee() {
-      var _this2 = this;
+  mounted: function mounted() {
+    var _this2 = this;
 
+    return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return this.$nextTick();
+              return _this2.$nextTick();
 
             case 2:
-              if (this.initial) {
-                this.options.map(function (v, i) {
+              if (_this2.initial) {
+                _this2.options.map(function (v, i) {
                   if (v.id === _this2.initial) {
                     _this2.lastIndex = i;
                   }
                 });
               }
 
-              this.$el.addEventListener('touchstart', this.onStart);
-              this.$el.addEventListener('touchmove', this.onTouchMove);
-              this.$el.addEventListener('touchend', this.onEnd);
-              this.$el.addEventListener('touchcancel', this.onCancel);
-              this.$el.addEventListener('mousewheel', this.onScroll);
-              this.$el.addEventListener('wheel', this.onScroll); // for IE
+              _this2.$el.addEventListener('touchstart', _this2.onStart);
 
-              this.$el.addEventListener('mousedown', this.onStart);
-              this.$el.addEventListener('mousemove', this.onMouseMove);
-              this.$el.addEventListener('mouseup', this.onEnd);
-              this.$el.addEventListener('mouseleave', this.onCancel);
-              this.calculatePivots();
+              _this2.$el.addEventListener('touchmove', _this2.onTouchMove);
 
-              if (this.lastIndex > 0) {
-                this.top = this.pivots[this.lastIndex] * -1;
+              _this2.$el.addEventListener('touchend', _this2.onEnd);
+
+              _this2.$el.addEventListener('touchcancel', _this2.onCancel);
+
+              _this2.$el.addEventListener('mousewheel', _this2.onScroll);
+
+              _this2.$el.addEventListener('wheel', _this2.onScroll); // for IE
+
+
+              _this2.$el.addEventListener('mousedown', _this2.onStart);
+
+              _this2.$el.addEventListener('mousemove', _this2.onMouseMove);
+
+              _this2.$el.addEventListener('mouseup', _this2.onEnd);
+
+              _this2.$el.addEventListener('mouseleave', _this2.onCancel);
+
+              _this2.calculatePivots();
+
+              if (_this2.lastIndex > 0) {
+                _this2.top = _this2.pivots[_this2.lastIndex] * -1;
               }
 
-              if (!this.value && this.sanitizedOptions[this.lastIndex]) {
-                this.$emit('input', this.sanitizedOptions[this.lastIndex].value);
+              if (!_this2.value && _this2.sanitizedOptions[_this2.lastIndex]) {
+                _this2.$emit('input', _this2.sanitizedOptions[_this2.lastIndex].value);
               }
 
             case 16:
@@ -928,15 +930,9 @@ var VPicker = {
               return _context.stop();
           }
         }
-      }, _callee, this);
-    }));
-
-    function mounted() {
-      return _mounted.apply(this, arguments);
-    }
-
-    return mounted;
-  }(),
+      }, _callee);
+    }))();
+  },
   destroyed: function destroyed() {
     this.$el.removeEventListener('touchstart', this.onStart);
     this.$el.removeEventListener('touchmove', this.onTouchMove);
@@ -1253,60 +1249,58 @@ var script$1 = {
   }
 };
 
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+const isOldIE = typeof navigator !== 'undefined' &&
+    /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
 function createInjector(context) {
-  return function (id, style) {
-    return addStyle(id, style);
-  };
+    return (id, style) => addStyle(id, style);
 }
-var HEAD;
-var styles = {};
-
+let HEAD;
+const styles = {};
 function addStyle(id, css) {
-  var group = isOldIE ? css.media || 'default' : id;
-  var style = styles[group] || (styles[group] = {
-    ids: new Set(),
-    styles: []
-  });
-
-  if (!style.ids.has(id)) {
-    style.ids.add(id);
-    var code = css.source;
-
-    if (css.map) {
-      // https://developer.chrome.com/devtools/docs/javascript-debugging
-      // this makes source maps inside style tags work properly in Chrome
-      code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
-
-      code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+    const group = isOldIE ? css.media || 'default' : id;
+    const style = styles[group] || (styles[group] = { ids: new Set(), styles: [] });
+    if (!style.ids.has(id)) {
+        style.ids.add(id);
+        let code = css.source;
+        if (css.map) {
+            // https://developer.chrome.com/devtools/docs/javascript-debugging
+            // this makes source maps inside style tags work properly in Chrome
+            code += '\n/*# sourceURL=' + css.map.sources[0] + ' */';
+            // http://stackoverflow.com/a/26603875
+            code +=
+                '\n/*# sourceMappingURL=data:application/json;base64,' +
+                    btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) +
+                    ' */';
+        }
+        if (!style.element) {
+            style.element = document.createElement('style');
+            style.element.type = 'text/css';
+            if (css.media)
+                style.element.setAttribute('media', css.media);
+            if (HEAD === undefined) {
+                HEAD = document.head || document.getElementsByTagName('head')[0];
+            }
+            HEAD.appendChild(style.element);
+        }
+        if ('styleSheet' in style.element) {
+            style.styles.push(code);
+            style.element.styleSheet.cssText = style.styles
+                .filter(Boolean)
+                .join('\n');
+        }
+        else {
+            const index = style.ids.size - 1;
+            const textNode = document.createTextNode(code);
+            const nodes = style.element.childNodes;
+            if (nodes[index])
+                style.element.removeChild(nodes[index]);
+            if (nodes.length)
+                style.element.insertBefore(textNode, nodes[index]);
+            else
+                style.element.appendChild(textNode);
+        }
     }
-
-    if (!style.element) {
-      style.element = document.createElement('style');
-      style.element.type = 'text/css';
-      if (css.media) style.element.setAttribute('media', css.media);
-
-      if (HEAD === undefined) {
-        HEAD = document.head || document.getElementsByTagName('head')[0];
-      }
-
-      HEAD.appendChild(style.element);
-    }
-
-    if ('styleSheet' in style.element) {
-      style.styles.push(code);
-      style.element.styleSheet.cssText = style.styles.filter(Boolean).join('\n');
-    } else {
-      var index = style.ids.size - 1;
-      var textNode = document.createTextNode(code);
-      var nodes = style.element.childNodes;
-      if (nodes[index]) style.element.removeChild(nodes[index]);
-      if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
-    }
-  }
 }
-
-var browser = createInjector;
 
 /* script */
 const __vue_script__$1 = script$1;
@@ -1351,16 +1345,20 @@ __vue_render__$1._withStripped = true;
   const __vue_is_functional_template__$1 = false;
   /* style inject SSR */
   
+  /* style inject shadow dom */
+  
 
   
-  var Arrow = normalizeComponent_1(
+  const __vue_component__$1 = normalizeComponent(
     { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
     __vue_inject_styles__$1,
     __vue_script__$1,
     __vue_scope_id__$1,
     __vue_is_functional_template__$1,
     __vue_module_identifier__$1,
-    browser,
+    false,
+    createInjector,
+    undefined,
     undefined
   );
 
@@ -1374,7 +1372,7 @@ var getDay = function getDay(n, monFst) {
 
 var script$2 = {
   components: {
-    Arrow: Arrow,
+    Arrow: __vue_component__$1,
     VPicker: VPicker
   },
   props: {
@@ -1765,9 +1763,9 @@ var script$2 = {
     isDefined: function isDefined(prop) {
       return typeof prop !== 'undefined' && prop;
     }
-  } // eslint-disable-next-line
-
-};
+  }
+} // eslint-disable-next-line
+;
 
 /* script */
 const __vue_script__$2 = script$2;
@@ -1915,15 +1913,19 @@ __vue_render__$2._withStripped = true;
   
   /* style inject SSR */
   
+  /* style inject shadow dom */
+  
 
   
-  var PickerDay = normalizeComponent_1(
+  const __vue_component__$2 = normalizeComponent(
     { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
     __vue_inject_styles__$2,
     __vue_script__$2,
     __vue_scope_id__$2,
     __vue_is_functional_template__$2,
     __vue_module_identifier__$2,
+    false,
+    undefined,
     undefined,
     undefined
   );
@@ -1936,7 +1938,7 @@ var getMaxDays = function getMaxDays(m, y) {
 
 var script$3 = {
   components: {
-    Arrow: Arrow,
+    Arrow: __vue_component__$1,
     VPicker: VPicker
   },
   props: {
@@ -2138,9 +2140,9 @@ var script$3 = {
 
       return disabledDates;
     }
-  } // eslint-disable-next-line
-
-};
+  }
+} // eslint-disable-next-line
+;
 
 /* script */
 const __vue_script__$3 = script$3;
@@ -2266,15 +2268,19 @@ __vue_render__$3._withStripped = true;
   
   /* style inject SSR */
   
+  /* style inject shadow dom */
+  
 
   
-  var PickerMonth = normalizeComponent_1(
+  const __vue_component__$3 = normalizeComponent(
     { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
     __vue_inject_styles__$3,
     __vue_script__$3,
     __vue_scope_id__$3,
     __vue_is_functional_template__$3,
     __vue_module_identifier__$3,
+    false,
+    undefined,
     undefined,
     undefined
   );
@@ -2282,7 +2288,7 @@ __vue_render__$3._withStripped = true;
 //
 var script$4 = {
   components: {
-    Arrow: Arrow,
+    Arrow: __vue_component__$1,
     VPicker: VPicker
   },
   props: {
@@ -2478,9 +2484,9 @@ var script$4 = {
 
       return disabledDates;
     }
-  } // eslint-disable-next-line
-
-};
+  }
+} // eslint-disable-next-line
+;
 
 /* script */
 const __vue_script__$4 = script$4;
@@ -2597,15 +2603,19 @@ __vue_render__$4._withStripped = true;
   
   /* style inject SSR */
   
+  /* style inject shadow dom */
+  
 
   
-  var PickerYear = normalizeComponent_1(
+  const __vue_component__$4 = normalizeComponent(
     { render: __vue_render__$4, staticRenderFns: __vue_staticRenderFns__$4 },
     __vue_inject_styles__$4,
     __vue_script__$4,
     __vue_scope_id__$4,
     __vue_is_functional_template__$4,
     __vue_module_identifier__$4,
+    false,
+    undefined,
     undefined,
     undefined
   );
@@ -2626,10 +2636,10 @@ var isAfter = function isAfter(d1, d2) {
 
 var script$5 = {
   components: {
-    DateInput: DateInput,
-    PickerDay: PickerDay,
-    PickerMonth: PickerMonth,
-    PickerYear: PickerYear
+    DateInput: __vue_component__,
+    PickerDay: __vue_component__$2,
+    PickerMonth: __vue_component__$3,
+    PickerYear: __vue_component__$4
   },
   props: {
     value: {
@@ -3373,16 +3383,20 @@ __vue_render__$5._withStripped = true;
   const __vue_is_functional_template__$5 = false;
   /* style inject SSR */
   
+  /* style inject shadow dom */
+  
 
   
-  var Datepicker = normalizeComponent_1(
+  const __vue_component__$5 = normalizeComponent(
     { render: __vue_render__$5, staticRenderFns: __vue_staticRenderFns__$5 },
     __vue_inject_styles__$5,
     __vue_script__$5,
     __vue_scope_id__$5,
     __vue_is_functional_template__$5,
     __vue_module_identifier__$5,
-    browser,
+    false,
+    createInjector,
+    undefined,
     undefined
   );
 
@@ -3471,7 +3485,12 @@ var script$6 = {
       if (!this.shouldRender) return;
       this.selectedTime = this.makeDate();
       this.changed();
-    }
+    } // selectedVal(v) {
+    //   this.selHour = getHrs(v, this.isMilitary)
+    //   this.selMin = getMinutes(v)
+    //   this.selectedTime = this.makeDate()
+    // }
+
   },
   methods: {
     initTime: function initTime(v) {
@@ -3586,16 +3605,20 @@ __vue_render__$6._withStripped = true;
   const __vue_is_functional_template__$6 = false;
   /* style inject SSR */
   
+  /* style inject shadow dom */
+  
 
   
-  var PickerTime = normalizeComponent_1(
+  const __vue_component__$6 = normalizeComponent(
     { render: __vue_render__$6, staticRenderFns: __vue_staticRenderFns__$6 },
     __vue_inject_styles__$6,
     __vue_script__$6,
     __vue_scope_id__$6,
     __vue_is_functional_template__$6,
     __vue_module_identifier__$6,
-    browser,
+    false,
+    createInjector,
+    undefined,
     undefined
   );
 
@@ -3671,16 +3694,20 @@ __vue_render__$7._withStripped = true;
   const __vue_is_functional_template__$7 = false;
   /* style inject SSR */
   
+  /* style inject shadow dom */
+  
 
   
-  var MeridiemBtn = normalizeComponent_1(
+  const __vue_component__$7 = normalizeComponent(
     { render: __vue_render__$7, staticRenderFns: __vue_staticRenderFns__$7 },
     __vue_inject_styles__$7,
     __vue_script__$7,
     __vue_scope_id__$7,
     __vue_is_functional_template__$7,
     __vue_module_identifier__$7,
-    browser,
+    false,
+    createInjector,
+    undefined,
     undefined
   );
 
@@ -3698,8 +3725,8 @@ var constructDefDate = function constructDefDate() {
 
 var script$8 = {
   components: {
-    PickerTime: PickerTime,
-    MeridiemBtn: MeridiemBtn
+    PickerTime: __vue_component__$6,
+    MeridiemBtn: __vue_component__$7
   },
   props: {
     // ONLY DATE OBJECT OR UNIX TIME!!!
@@ -3968,17 +3995,21 @@ __vue_render__$8._withStripped = true;
   const __vue_is_functional_template__$8 = false;
   /* style inject SSR */
   
+  /* style inject shadow dom */
+  
 
   
-  var index = normalizeComponent_1(
+  const __vue_component__$8 = normalizeComponent(
     { render: __vue_render__$8, staticRenderFns: __vue_staticRenderFns__$8 },
     __vue_inject_styles__$8,
     __vue_script__$8,
     __vue_scope_id__$8,
     __vue_is_functional_template__$8,
     __vue_module_identifier__$8,
-    browser,
+    false,
+    createInjector,
+    undefined,
     undefined
   );
 
-export { Datepicker, index as Timepicker };
+export { __vue_component__$5 as Datepicker, __vue_component__$8 as Timepicker };

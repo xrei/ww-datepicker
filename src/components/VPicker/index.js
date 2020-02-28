@@ -324,7 +324,8 @@ export default {
           }
         }, items)
       ]),
-      h('div', {class: ['vue-scroll-picker-layer'],
+      h('div', {
+        class: ['vue-scroll-picker-layer'],
         on: {
           'wheel': (e) => e.preventDefault()
         }
